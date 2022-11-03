@@ -16,6 +16,7 @@
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, ... }: {
+    # Add more hosts to configure here
     darwinConfigurations."FVFFT3XKQ6LR" = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [

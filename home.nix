@@ -159,7 +159,6 @@
     };
     sessionVariables = {
       LESSHISTFILE = "${config.xdg.stateHome}/less/history";
-      SSH_AUTH_SOCK = "~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock";
     };
   };
 
@@ -171,6 +170,7 @@
   home.shellAliases = {
     cat = "bat";
     dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
+    darwin-switch = "(cd /tmp && darwin-rebuild switch --flake ~/.nixpkgs)";
   };
 
   home.file.".asdfrc" = {
