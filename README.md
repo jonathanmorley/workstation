@@ -1,0 +1,2 @@
+# workstation
+Bootstrap a workstation
