@@ -23,6 +23,9 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+    config = {
+      whitelist.exact = [config.home.homeDirectory];
+    };
   };
   programs.exa = {
     enable = true;
@@ -202,5 +205,9 @@
       awscli 2.4.6
       golang 1.18.7
     '';
+  };
+
+  home.file.".envrc" = {
+    text = "use asdf";
   };
 }
