@@ -16,37 +16,41 @@
     gettext
   ];
 
+  fonts = {
+    fontDir.enable = true;
+    fonts = [
+      (pkgs.nerdfonts.override {
+        fonts = ["FiraCode"];
+      })
+    ];
+  };
+
   programs.zsh.enable = true;
 
   services.nix-daemon.enable = true;
 
-  homebrew.enable = true;
-  homebrew.onActivation.cleanup = "zap";
-  homebrew.taps = [
-    "homebrew/cask"
-    "homebrew/cask-fonts"
-  ];
-  homebrew.brews = [
-    "asdf"
-  ];
-  homebrew.casks = [
-    "1password"
-    "alacritty"
-    "docker"
-    "firefox"
-    "font-fira-code-nerd-font"
-    "intellij-idea"
-    "lulu"
-    "microsoft-office"
-    "slack"
-    "visual-studio-code"
-    "zoom"
-  ];
+  homebrew = {
+    enable = true;
+    onActivation.cleanup = "zap";
+    taps = ["homebrew/cask"];
+    brews = ["asdf"];
+    casks = [
+      "1password"
+      "alacritty"
+      "docker"
+      "firefox"
+      "intellij-idea"
+      "lulu"
+      "microsoft-office"
+      "slack"
+      "visual-studio-code"
+      "zoom"
+    ];
+  };
 
   users.users.jonathan = {
     name = "jonathan";
     home = "/Users/jonathan";
-    shell = pkgs.zsh;
   };
 
   security.pam.enableSudoTouchIdAuth = true;

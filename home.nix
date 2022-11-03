@@ -26,6 +26,11 @@
     config = {
       whitelist.exact = [config.home.homeDirectory];
     };
+    stdlib = ''
+      use_asdf() {
+        source_env "$(asdf direnv envrc "$@")"
+      }
+    '';
   };
   programs.exa = {
     enable = true;
@@ -147,7 +152,7 @@
       }
     ];
     initExtra = ''
-      eval "$(zellij setup --generate-auto-start zsh)"
+      eval "$(${pkgs.zellij}/bin/zellij setup --generate-auto-start zsh)"
     '';
     oh-my-zsh = {
       enable = true;
@@ -182,28 +187,14 @@
 
   home.file.".tool-versions" = {
     text = ''
-      # NodeJS
-      nodejs 16.13.1
-      yarn 1.22.4
-      pnpm 7.6.0
-
-      # Python
       python 3.9.1
       poetry 1.1.13
-
-      # Ruby
-      ruby 2.7.0
-
-      # Java
-      java adoptopenjdk-11.0.15+10
-      maven 3.6.3
-
-      # .NET
-      dotnet-core 3.1.201
-      rust 1.57.0
-      github-cli 2.8.0
       awscli 2.4.6
-      golang 1.18.7
+    '';
+    onChange = ''
+      cd ~
+      . /opt/homebrew/opt/asdf/libexec/asdf.sh
+      asdf install
     '';
   };
 
