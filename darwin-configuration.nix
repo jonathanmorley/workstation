@@ -47,7 +47,7 @@
     name = "jonathan";
     home = "/Users/jonathan";
     shell = pkgs.zsh;
-};
+  };
 
   security.pam.enableSudoTouchIdAuth = true;
 

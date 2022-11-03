@@ -150,10 +150,10 @@
       enable = true;
       plugins = [
         "asdf"
-        "aws"
-        "brew"
-        "docker"
+        "gh"
         "git"
+        "ripgrep"
+        "rust"
         "vscode"
       ];
     };
