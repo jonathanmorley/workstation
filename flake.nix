@@ -16,22 +16,49 @@
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, ... }: {
-    # Add more hosts to configure here
-    darwinConfigurations."FVFFT3XKQ6LR" = darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [
-        # `nix-darwin` config
-        ./darwin-configuration.nix
+    darwinConfigurations = rec {
+      # Mininal configurations to bootstrap systems
+      bootstrap-x86 = nixpkgs.lib.makeOverridable darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        modules = [ ./darwin-configuration.nix ];
+      };
+      bootstrap-arm = bootstrap-x86.override { system = "aarch64-darwin"; };
 
-        # `home-manager` module
-        home-manager.darwinModules.home-manager
-        {
-          # `home-manager` config
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.jonathan = import ./home.nix;
-        }
-      ];
+      # Config with small modifications needed/desired for CI with GitHub workflow
+      githubCI = darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        modules = [
+          # `nix-darwin` config
+          ./darwin-configuration.nix
+
+          # `home-manager` module
+          home-manager.darwinModules.home-manager
+          {
+            # `home-manager` config
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jonathan = import ./home.nix;
+          }
+        ];
+      };
+
+      # Work MacBook Air
+      "FVFFT3XKQ6LR" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          # `nix-darwin` config
+          ./darwin-configuration.nix
+
+          # `home-manager` module
+          home-manager.darwinModules.home-manager
+          {
+            # `home-manager` config
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.jonathan = import ./home.nix;
+          }
+        ];
+      };
     };
  };
 }
