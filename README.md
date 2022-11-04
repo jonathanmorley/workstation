@@ -6,7 +6,7 @@
 
 1. Install [nix](https://nixos.org/download.html)
 2. Install [nix-darwin](https://github.com/LnL7/nix-darwin#install)
-3. Clone the repository to `~/.nixpkgs`: `git clone git@github.com:jonathanmorley/workstation.git ~/.nixpkgs`
+3. Clone the repository to `~/.nixpkgs`: `git clone git@github.com:jonathanmorley/nixpkgs.git ~/.nixpkgs`
 4. Rebuild: `darwin-rebuild switch --flake ~/.nixpkgs`
 5. Check alias works (new terminal): `darwin-switch`
 
