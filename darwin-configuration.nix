@@ -13,6 +13,7 @@
   environment.systemPath = [ "/opt/homebrew/bin" ];
   environment.shells = with pkgs; [ zsh ];
   environment.systemPackages = with pkgs; [
+    # For python compilation
     gettext
   ];
 
