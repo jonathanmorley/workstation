@@ -23,13 +23,8 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-    config = {
-      whitelist.exact = [config.home.homeDirectory];
-    };
     stdlib = ''
-      use_asdf() {
-        source_env "$(asdf direnv envrc "$@")"
-      }
+      use_asdf() { source_env "$(asdf direnv envrc "$@")" }
     '';
   };
   programs.exa = {
@@ -72,6 +67,9 @@
       "Network Trash Folder"
       "Temporary Items"
       ".apdisk"
+
+      # direnv integration
+      ".envrc"
     ];
     extraConfig = {
       fetch.prune = true;
@@ -87,7 +85,32 @@
     enable = true;
     coc = {
       enable = true;
+      pluginConfig = ''
+        " Trigger completion on <c-space>
+        inoremap <silent><expr> <c-space> coc#refresh()
+
+        " Accept suggestions with <cr>
+        inoremap <silent><expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+      '';
     };
+    plugins = with pkgs.vimPlugins; [
+      airline
+      coc-docker
+      coc-eslint
+      coc-git
+      coc-java
+      coc-jest
+      coc-json
+      coc-prettier
+      coc-pyright
+      coc-python
+      coc-rust-analyzer
+      coc-sh
+      coc-toml
+      coc-tsserver
+      coc-yaml
+      sleuth
+    ];
     viAlias = true;
     vimAlias = true;
   };
@@ -139,25 +162,12 @@
     enableAutosuggestions = true;
     enableCompletion = true;
     enableSyntaxHighlighting = true;
-    plugins = [
-      {
-        name = "djui/alias-tips";
-        file = "alias-tips.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "djui";
-          repo = "alias-tips";
-          rev = "9dfd313544082b6d7b44298cc0bb181e7ceaa993";
-          sha256 = "sha256-46oJvnIzcWsFz7K0jWOf7VeSmGZDgFmqGFQbrrM9KqA";
-        };
-      }
-    ];
     initExtra = ''
       eval "$(${pkgs.zellij}/bin/zellij setup --generate-auto-start zsh)"
     '';
     oh-my-zsh = {
       enable = true;
       plugins = [
-        "asdf"
         "gh"
         "git"
         "ripgrep"
@@ -171,7 +181,11 @@
   };
 
   home.packages = with pkgs; [
+    awscli2
     fd
+    gh
+    nodejs
+    python3
     ripgrep
   ];
 
@@ -183,22 +197,5 @@
 
   home.file.".asdfrc" = {
     text = "legacy_version_file = yes";
-  };
-
-  home.file.".tool-versions" = {
-    text = ''
-      python 3.9.1
-      poetry 1.1.13
-      awscli 2.4.6
-    '';
-    onChange = ''
-      cd ~
-      . /opt/homebrew/opt/asdf/libexec/asdf.sh
-      asdf install
-    '';
-  };
-
-  home.file.".envrc" = {
-    text = "use asdf";
   };
 }
