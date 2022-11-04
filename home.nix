@@ -24,7 +24,9 @@
     enable = true;
     nix-direnv.enable = true;
     stdlib = ''
-      use_asdf() { source_env "$(asdf direnv envrc "$@")" }
+      use_asdf() {
+        source_env "$(asdf direnv envrc "$@")"
+      }
     '';
   };
   programs.exa = {
@@ -164,6 +166,7 @@
     enableSyntaxHighlighting = true;
     initExtra = ''
       eval "$(${pkgs.zellij}/bin/zellij setup --generate-auto-start zsh)"
+      . "/opt/homebrew/opt/asdf/libexec/lib/asdf.sh"
     '';
     oh-my-zsh = {
       enable = true;
@@ -177,6 +180,7 @@
     };
     sessionVariables = {
       LESSHISTFILE = "${config.xdg.stateHome}/less/history";
+      DIRENV_LOG_FORMAT = "";
     };
   };
 
