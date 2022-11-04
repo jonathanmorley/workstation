@@ -186,6 +186,7 @@
 
   home.packages = with pkgs; [
     awscli2
+    dotnet-sdk_7
     fd
     gh
     nodejs
