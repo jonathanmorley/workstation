@@ -41,6 +41,7 @@
     userEmail = "jmorley@cvent.com";
     signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPBkddsoU1owq/A9W4CuaUY+cYA5otZ2ejivt6CbwSyi";
     signing.signByDefault = true;
+
     ignores = [
       ### macOS ###
       # General
@@ -76,6 +77,7 @@
     extraConfig = {
       fetch.prune = true;
       rebase.autosquash = true;
+      pull.rebase = true;
       push.default = "current";
       init.defaultBranch = "main";
       gpg.format = "ssh";
