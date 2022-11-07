@@ -1,6 +1,6 @@
 # See https://daiderd.com/nix-darwin/manual/index.html#sec-options
 
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 {
   # Nix configuration
   nix.settings = {
@@ -10,7 +10,7 @@
   };
 
   environment.pathsToLink = [ "/share/zsh" ];
-  environment.systemPath = [ "/opt/homebrew/bin" ];
+  environment.systemPath = [ config.homebrew.brewPrefix ];
   environment.shells = with pkgs; [ zsh ];
   environment.systemPackages = with pkgs; [
     # For python compilation

@@ -87,11 +87,10 @@
     enable = true;
     coc = {
       enable = true;
+      # Trigger completion on <c-space>
+      # Accept suggestions with <cr>
       pluginConfig = ''
-        " Trigger completion on <c-space>
         inoremap <silent><expr> <c-space> coc#refresh()
-
-        " Accept suggestions with <cr>
         inoremap <silent><expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
       '';
     };
@@ -111,8 +110,19 @@
       coc-toml
       coc-tsserver
       coc-yaml
+      {
+        plugin = nerdtree;
+        # Start NERDTree and put the cursor back in the other window.
+        # Close the tab if NERDTree is the only window remaining in it.
+        config = ''
+          autocmd VimEnter * NERDTree | wincmd p
+          autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+        '';
+      }
+      nerdtree-git-plugin
       sleuth
     ];
+    extraConfig = "let NERDTreeShowHidden=1";
     viAlias = true;
     vimAlias = true;
   };
@@ -153,7 +163,10 @@
   programs.topgrade = {
     enable = true;
     settings = {
-      disable = ["rustup"];
+      disable = [
+        "rustup"
+        "node"
+      ];
     };
   };
   programs.zellij.enable = true;
@@ -166,7 +179,7 @@
     enableSyntaxHighlighting = true;
     initExtra = ''
       eval "$(${pkgs.zellij}/bin/zellij setup --generate-auto-start zsh)"
-      . "/opt/homebrew/opt/asdf/libexec/lib/asdf.sh"
+      . "$(brew --prefix)/opt/asdf/libexec/lib/asdf.sh"
     '';
     oh-my-zsh = {
       enable = true;
