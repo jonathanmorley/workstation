@@ -22,7 +22,7 @@ cd ~/.nixpkgs
 ```
 4. Bootstrap `nix build --extra-experimental-features 'nix-command flakes' .#darwinConfigurations.bootstrap-x86.system`
 5. Add host to config file
-6. Run `darwin-rebuild switch --flake ~/.nixpkgs`
+6. Run `./result/sw/bin/darwin-rebuild switch --flake ~/.nixpkgs`
 
 ## Resources
 
