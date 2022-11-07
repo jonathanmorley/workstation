@@ -1,6 +1,6 @@
 # See https://nix-community.github.io/home-manager/options.html
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, users, ...  }:
 {
   home.stateVersion = "22.05";
 
@@ -37,9 +37,9 @@
   programs.git = {
     enable = true;
     delta.enable = true;
-    userName = "Morley, Jonathan";
-    userEmail = "jmorley@cvent.com";
-    signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPBkddsoU1owq/A9W4CuaUY+cYA5otZ2ejivt6CbwSyi";
+    userName = users.primaryUser.fullName;
+    userEmail = users.primaryUser.email;
+    signing.key = users.primaryUser.publicKey;
     signing.signByDefault = true;
 
     ignores = [

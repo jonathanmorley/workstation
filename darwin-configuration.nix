@@ -1,6 +1,6 @@
 # See https://daiderd.com/nix-darwin/manual/index.html#sec-options
 
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, ... }@inputs:
 {
   # Nix configuration
   nix.settings = {
@@ -47,11 +47,6 @@
       "visual-studio-code"
       "zoom"
     ];
-  };
-
-  users.users.jonathan = {
-    name = "jonathan";
-    home = "/Users/jonathan";
   };
 
   security.pam.enableSudoTouchIdAuth = true;
