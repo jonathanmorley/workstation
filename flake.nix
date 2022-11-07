@@ -38,7 +38,13 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.${config.users.primaryUser.username} = import ./home.nix;
-              home-manager.extraSpecialArgs.users = config.users;
+              home-manager.extraSpecialArgs = {
+                users = config.users;
+                ssh = {
+                  signingProgram = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+                  identityAgent = "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
+                };
+              };
             }
           )
       ];

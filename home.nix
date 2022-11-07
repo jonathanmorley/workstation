@@ -1,6 +1,6 @@
 # See https://nix-community.github.io/home-manager/options.html
 
-{ config, pkgs, lib, users, ...  }:
+{ config, pkgs, lib, users, ssh, ...  }:
 {
   home.stateVersion = "22.05";
 
@@ -81,7 +81,7 @@
       push.default = "current";
       init.defaultBranch = "main";
       gpg.format = "ssh";
-      gpg."ssh".program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      gpg."ssh".program = ssh.signingProgram;
     };
   };
   programs.jq.enable = true;
@@ -131,7 +131,7 @@
   programs.nix-index.enable = true;
   programs.ssh = {
     enable = true;
-    matchBlocks."*".extraOptions.IdentityAgent = "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"";
+    matchBlocks."*".extraOptions.IdentityAgent = "\"${ssh.identityAgent}\"";
   };
   programs.starship = {
     enable = true;
