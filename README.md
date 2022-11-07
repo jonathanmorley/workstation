@@ -17,7 +17,7 @@ nix-channel --update
 ```
 3. Clone and open the repository
 ```
-git clone git@github.com:jonathanmorley/nixpkgs.git ~/.nixpkgs
+git clone https://github.com/jonathanmorley/nixpkgs.git ~/.nixpkgs
 cd ~/.nixpkgs
 ```
 4. Bootstrap `nix build --extra-experimental-features 'nix-command flakes' .#darwinConfigurations.bootstrap-x86.system`
