@@ -34,12 +34,12 @@
     enable = true;
     onActivation.cleanup = "zap";
     taps = ["homebrew/cask"];
-    brews = ["asdf"];
     casks = [
       "1password"
       "alacritty"
       "docker"
       "firefox"
+      "hammerspoon"
       "intellij-idea"
       "lulu"
       "microsoft-office"

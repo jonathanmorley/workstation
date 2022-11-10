@@ -34,6 +34,8 @@
         home-manager.darwinModules.home-manager
           ({ config, ... }:
             {
+              nixpkgs.config.allowUnfree = true;
+
               users.users.${config.users.primaryUser.username}.home = "/Users/${config.users.primaryUser.username}";
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
@@ -86,6 +88,8 @@
 
           modules = darwinModules ++ [
             ({ lib, ... }: {
+              services.cachix-agent.name = "FVFFT3XKQ6LR";
+
               users.primaryUser = primaryUserInfo // {
                 email = "jmorley@cvent.com";
                 publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPBkddsoU1owq/A9W4CuaUY+cYA5otZ2ejivt6CbwSyi";

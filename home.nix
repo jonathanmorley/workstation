@@ -131,6 +131,7 @@
   programs.nix-index.enable = true;
   programs.ssh = {
     enable = true;
+    hashKnownHosts = true;
     matchBlocks."*".extraOptions.IdentityAgent = "\"${ssh.identityAgent}\"";
   };
   programs.starship = {
@@ -168,6 +169,7 @@
       disable = [
         "rustup"
         "node"
+        "pip3"
       ];
     };
   };
@@ -181,7 +183,7 @@
     enableSyntaxHighlighting = true;
     initExtra = ''
       eval "$(${pkgs.zellij}/bin/zellij setup --generate-auto-start zsh)"
-      . "$(brew --prefix)/opt/asdf/libexec/lib/asdf.sh"
+      . "${pkgs.asdf-vm}/share/asdf-vm/lib/asdf.sh"
     '';
     oh-my-zsh = {
       enable = true;
@@ -200,11 +202,13 @@
   };
 
   home.packages = with pkgs; [
+    asdf-vm
     awscli2
     dotnet-sdk_7
     fd
     gh
     nodejs
+    powershell
     python3
     ripgrep
   ];
@@ -217,5 +221,43 @@
 
   home.file.".asdfrc" = {
     text = "legacy_version_file = yes";
+  };
+
+  home.file.".hammerspoon/init.lua" = {
+    text = ''
+      local log = hs.logger.new('init', 'info')
+
+      hs.loadSpoon("SpoonInstall")
+      spoon.SpoonInstall.use_syncinstall = true
+
+      function apps()
+        apps = {}
+        for path in hs.fs.dir("~/Applications/Home Manager Apps/") do
+          fullPath = "~/Applications/Home Manager Apps/" .. path
+          info = hs.application.infoForBundlePath(fullPath)
+
+          if next(info) ~= nil then
+            apps[info["CFBundleDisplayName"]] = {
+              icon = hs.image.imageFromAppBundle(info["CFBundleIdentifier"]),
+              description = fullPath,
+              fn = function()
+                hs.application.open(info["CFBundleIdentifier"])
+              end
+            }
+          end
+        end
+        return apps
+      end
+
+      spoon.SpoonInstall:andUse("Seal", {
+        hotkeys = { toggle = { {"cmd"}, "space" } },
+        fn = function(s)
+          s:loadPlugins({"apps", "useractions"})
+          s.plugins.useractions.actions = apps()
+          s:refreshAllCommands()
+        end,
+        start = true,
+      })
+    '';
   };
 }
