@@ -13,9 +13,11 @@
     # User management
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
+    spacebar.url = "github:cmacrae/spacebar/v1.4.0";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, spacebar, ... }:
     let
       inherit (darwin.lib) darwinSystem;
 
@@ -34,8 +36,6 @@
         home-manager.darwinModules.home-manager
           ({ config, ... }:
             {
-              nixpkgs.config.allowUnfree = true;
-
               users.users.${config.users.primaryUser.username}.home = "/Users/${config.users.primaryUser.username}";
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;

@@ -32,11 +32,10 @@
 
   homebrew = {
     enable = true;
-    onActivation.cleanup = "zap";
+    onActivation.cleanup = "uninstall";
     taps = ["homebrew/cask"];
     casks = [
       "1password"
-      "alacritty"
       "docker"
       "firefox"
       "hammerspoon"
@@ -44,7 +43,9 @@
       "lulu"
       "microsoft-office"
       "slack"
+      "tailscale"
       "visual-studio-code"
+      "warp"
       "zoom"
     ];
   };

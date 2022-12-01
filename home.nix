@@ -33,7 +33,12 @@
     enable = true;
     enableAliases = true;
   };
-  programs.gh.enable = true;
+  programs.gh = {
+    enable = true;
+    settings = {
+      git_protocol = "ssh";
+    };
+  };
   programs.git = {
     enable = true;
     delta.enable = true;
@@ -42,7 +47,7 @@
     signing.key = users.primaryUser.publicKey;
     signing.signByDefault = true;
 
-    ignores = [
+    ignores = (if pkgs.stdenv.isDarwin then [
       ### macOS ###
       # General
       ".DS_Store"
@@ -70,7 +75,22 @@
       "Network Trash Folder"
       "Temporary Items"
       ".apdisk"
+    ] else [
+      ### Linux ###
+      "*~"
 
+      # temporary files which can be created if a process still has a handle open of a deleted file
+      ".fuse_hidden*"
+
+      # KDE directory preferences
+      ".directory"
+
+      # Linux trash folder which might appear on any partition or disk
+      ".Trash-*"
+
+      # .nfs files are created when an open file is removed but is still being accessed
+      ".nfs*"
+    ]) ++ [
       # direnv integration
       ".envrc"
     ];
@@ -132,7 +152,11 @@
   programs.ssh = {
     enable = true;
     hashKnownHosts = true;
-    matchBlocks."*".extraOptions.IdentityAgent = "\"${ssh.identityAgent}\"";
+    matchBlocks."*" = {
+      extraOptions.IdentityAgent = "\"${ssh.identityAgent}\"";
+      identityFile = "~/.ssh/id.pub";
+      identitiesOnly = true;
+    };
   };
   programs.starship = {
     enable = true;
@@ -173,7 +197,7 @@
       ];
     };
   };
-  programs.zellij.enable = true;
+  programs.zellij.enable = false;
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
@@ -182,7 +206,6 @@
     enableCompletion = true;
     enableSyntaxHighlighting = true;
     initExtra = ''
-      eval "$(${pkgs.zellij}/bin/zellij setup --generate-auto-start zsh)"
       . "${pkgs.asdf-vm}/share/asdf-vm/lib/asdf.sh"
     '';
     oh-my-zsh = {
@@ -195,10 +218,6 @@
         "vscode"
       ];
     };
-    sessionVariables = {
-      LESSHISTFILE = "${config.xdg.stateHome}/less/history";
-      DIRENV_LOG_FORMAT = "";
-    };
   };
 
   home.packages = with pkgs; [
@@ -206,12 +225,21 @@
     awscli2
     dotnet-sdk_7
     fd
-    gh
     nodejs
     powershell
     python3
     ripgrep
+    rustup
   ];
+
+  home.sessionPath = [
+    "$HOME/.cargo/bin"
+  ];
+
+  home.sessionVariables = {
+    LESSHISTFILE = "${config.xdg.stateHome}/less/history";
+    DIRENV_LOG_FORMAT = "";
+  };
 
   home.shellAliases = {
     cat = "bat";
@@ -226,38 +254,28 @@
   home.file.".hammerspoon/init.lua" = {
     text = ''
       local log = hs.logger.new('init', 'info')
+      require("hs.ipc")
 
       hs.loadSpoon("SpoonInstall")
       spoon.SpoonInstall.use_syncinstall = true
 
-      function apps()
-        apps = {}
-        for path in hs.fs.dir("~/Applications/Home Manager Apps/") do
-          fullPath = "~/Applications/Home Manager Apps/" .. path
-          info = hs.application.infoForBundlePath(fullPath)
-
-          if next(info) ~= nil then
-            apps[info["CFBundleDisplayName"]] = {
-              icon = hs.image.imageFromAppBundle(info["CFBundleIdentifier"]),
-              description = fullPath,
-              fn = function()
-                hs.application.open(info["CFBundleIdentifier"])
-              end
-            }
-          end
-        end
-        return apps
-      end
-
       spoon.SpoonInstall:andUse("Seal", {
         hotkeys = { toggle = { {"cmd"}, "space" } },
         fn = function(s)
-          s:loadPlugins({"apps", "useractions"})
-          s.plugins.useractions.actions = apps()
+          s:loadPlugins({"apps"})
           s:refreshAllCommands()
         end,
         start = true,
       })
+
+      hs.hotkey.bind({"cmd", "alt", "ctrl"}, "W", function()
+        log.i(hs.application.get("1Password"))
+      end)
     '';
+    onChange = "/Applications/Hammerspoon.app/Contents/Frameworks/hs/hs -c 'hs.reload()'";
+  };
+
+  home.file.".ssh/id.pub" = {
+    text = users.primaryUser.publicKey;
   };
 }
