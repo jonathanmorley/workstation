@@ -20,15 +20,6 @@
     };
   };
   programs.bat.enable = true;
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    stdlib = ''
-      use_asdf() {
-        source_env "$(asdf direnv envrc "$@")"
-      }
-    '';
-  };
   programs.exa = {
     enable = true;
     enableAliases = true;
@@ -206,7 +197,7 @@
     enableCompletion = true;
     enableSyntaxHighlighting = true;
     initExtra = ''
-      . "${pkgs.asdf-vm}/share/asdf-vm/lib/asdf.sh"
+      eval "$($(brew --prefix)/bin/rtx activate -s zsh)"
     '';
     oh-my-zsh = {
       enable = true;
@@ -238,7 +229,6 @@
 
   home.sessionVariables = {
     LESSHISTFILE = "${config.xdg.stateHome}/less/history";
-    DIRENV_LOG_FORMAT = "";
   };
 
   home.shellAliases = {
@@ -249,30 +239,6 @@
 
   home.file.".asdfrc" = {
     text = "legacy_version_file = yes";
-  };
-
-  home.file.".hammerspoon/init.lua" = {
-    text = ''
-      local log = hs.logger.new('init', 'info')
-      require("hs.ipc")
-
-      hs.loadSpoon("SpoonInstall")
-      spoon.SpoonInstall.use_syncinstall = true
-
-      spoon.SpoonInstall:andUse("Seal", {
-        hotkeys = { toggle = { {"cmd"}, "space" } },
-        fn = function(s)
-          s:loadPlugins({"apps"})
-          s:refreshAllCommands()
-        end,
-        start = true,
-      })
-
-      hs.hotkey.bind({"cmd", "alt", "ctrl"}, "W", function()
-        log.i(hs.application.get("1Password"))
-      end)
-    '';
-    onChange = "/Applications/Hammerspoon.app/Contents/Frameworks/hs/hs -c 'hs.reload()'";
   };
 
   home.file.".ssh/id.pub" = {

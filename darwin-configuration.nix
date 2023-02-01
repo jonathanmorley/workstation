@@ -33,15 +33,18 @@
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
-    taps = ["homebrew/cask"];
+    taps = [
+      "homebrew/cask"
+      "jdxcode/tap"
+    ];
+    brews = ["rtx"];
     casks = [
       "1password"
       "docker"
       "firefox"
-      "hammerspoon"
-      "intellij-idea"
       "lulu"
       "microsoft-office"
+      "raycast"
       "slack"
       "tailscale"
       "visual-studio-code"
