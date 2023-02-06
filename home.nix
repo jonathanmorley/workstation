@@ -212,12 +212,12 @@
   };
 
   home.packages = with pkgs; [
-    asdf-vm
     awscli2
     dotnet-sdk_7
     fd
     nodejs
     powershell
+    python2
     python3
     ripgrep
     rustup

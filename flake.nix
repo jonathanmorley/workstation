@@ -13,11 +13,9 @@
     # User management
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
-
-    spacebar.url = "github:cmacrae/spacebar/v1.4.0";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, spacebar, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, ... }:
     let
       inherit (darwin.lib) darwinSystem;
 
