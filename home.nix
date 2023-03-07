@@ -1,8 +1,25 @@
 # See https://nix-community.github.io/home-manager/options.html
 
-{ config, pkgs, lib, users, ssh, ...  }:
+{ config, pkgs, lib, profile, ...  }:
+let
+  email = if profile == "cvent" then "jmorley@cvent.com" else "morley.jonathan@gmail.com";
+  publicKey = if profile == "cvent" then "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPBkddsoU1owq/A9W4CuaUY+cYA5otZ2ejivt6CbwSyi" else "";
+in
 {
-  home.stateVersion = "22.05";
+  # Home Manager needs a bit of information about you and the
+  # paths it should manage.
+  home.username = "jonathan";
+  home.homeDirectory = lib.mkForce (if pkgs.stdenv.isDarwin then  "/Users/jonathan" else "/home/jonathan");
+
+  # This value determines the Home Manager release that your
+  # configuration is compatible with. This helps avoid breakage
+  # when a new Home Manager release introduces backwards
+  # incompatible changes.
+  #
+  # You can update Home Manager without changing this value. See
+  # the Home Manager release notes for a list of state version
+  # changes in each release.
+  home.stateVersion = "22.11";
 
   programs.alacritty = {
     enable = true;
@@ -33,9 +50,9 @@
   programs.git = {
     enable = true;
     delta.enable = true;
-    userName = users.primaryUser.fullName;
-    userEmail = users.primaryUser.email;
-    signing.key = users.primaryUser.publicKey;
+    userName = "Jonathan Morley";
+    userEmail = email;
+    signing.key = publicKey;
     signing.signByDefault = true;
 
     ignores = (if pkgs.stdenv.isDarwin then [
@@ -92,11 +109,12 @@
       push.default = "current";
       init.defaultBranch = "main";
       gpg.format = "ssh";
-      gpg."ssh".program = ssh.signingProgram;
+      gpg."ssh".program = if pkgs.stdenv.isDarwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else "";
     };
   };
   programs.jq.enable = true;
   programs.neovim = {
+    defaultEditor = true;
     enable = true;
     coc = {
       enable = true;
@@ -144,7 +162,7 @@
     enable = true;
     hashKnownHosts = true;
     matchBlocks."*" = {
-      extraOptions.IdentityAgent = "\"${ssh.identityAgent}\"";
+      extraOptions.IdentityAgent = if pkgs.stdenv.isDarwin then "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"" else "";
       identityFile = "~/.ssh/id.pub";
       identitiesOnly = true;
     };
@@ -196,8 +214,8 @@
     enableAutosuggestions = true;
     enableCompletion = true;
     enableSyntaxHighlighting = true;
-    initExtra = ''
-      eval "$($(brew --prefix)/bin/rtx activate -s zsh)"
+    initExtraBeforeCompInit = ''
+      eval "$(${pkgs.rtx}/bin/rtx activate -s zsh)"
     '';
     oh-my-zsh = {
       enable = true;
@@ -211,16 +229,17 @@
     };
   };
 
-  home.packages = with pkgs; [
-    awscli2
-    dotnet-sdk_7
-    fd
-    nodejs
-    powershell
-    python2
-    python3
-    ripgrep
-    rustup
+  home.packages = [
+    pkgs.awscli2
+    pkgs.dotnet-sdk_7
+    pkgs.fd
+    pkgs.ipcalc
+    pkgs.nodejs
+    pkgs.powershell
+    pkgs.python3
+    pkgs.ripgrep
+    pkgs.rustup
+    pkgs.rtx
   ];
 
   home.sessionPath = [
@@ -242,6 +261,6 @@
   };
 
   home.file.".ssh/id.pub" = {
-    text = users.primaryUser.publicKey;
+    text = publicKey;
   };
 }

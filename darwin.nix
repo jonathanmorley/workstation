@@ -1,6 +1,6 @@
 # See https://daiderd.com/nix-darwin/manual/index.html#sec-options
 
-{ pkgs, lib, config, ... }@inputs:
+{ pkgs, lib, config, ... }:
 {
   # Nix configuration
   nix.settings = {
@@ -33,11 +33,7 @@
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
-    taps = [
-      "homebrew/cask"
-      "jdxcode/tap"
-    ];
-    brews = ["rtx"];
+    taps = ["homebrew/cask"];
     casks = [
       "1password"
       "docker"
@@ -47,6 +43,7 @@
       "raycast"
       "slack"
       "tailscale"
+      "teamviewer"
       "visual-studio-code"
       "warp"
       "zoom"
