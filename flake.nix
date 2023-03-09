@@ -22,22 +22,32 @@
   outputs = { self, nixpkgs, darwin, home-manager, rtx, ... }:
     let
       darwinModules = [./darwin.nix];
-      homeModules = { profile, ... }: [
+      homeModules = { publicKey, ... }: [
         home-manager.darwinModules.home-manager {
           nixpkgs.overlays = [ rtx.overlay ];
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit profile; };
+          home-manager.extraSpecialArgs = { inherit publicKey; };
           home-manager.users.jonathan = import ./home.nix;
         }
       ];
     in
     {
       darwinConfigurations = rec {
+        # GitHub
+        "github-ci" = darwin.lib.darwinSystem {
+          system = "x86_64-darwin";
+          modules = darwinModules ++ homeModules {
+            publicKey = "";
+          };
+        };
+
         # Work MacBook Air
         "FVFFT3XKQ6LR" = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
-          modules = darwinModules ++ homeModules { profile = "cvent"; };
+          modules = darwinModules ++ homeModules {
+            publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPBkddsoU1owq/A9W4CuaUY+cYA5otZ2ejivt6CbwSyi";
+          };
         };
       };
     };

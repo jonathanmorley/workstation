@@ -1,11 +1,6 @@
 # See https://nix-community.github.io/home-manager/options.html
 
-{ config, pkgs, lib, profile, ...  }:
-let
-  email = if profile == "cvent" then "jmorley@cvent.com" else "morley.jonathan@gmail.com";
-  publicKey = if profile == "cvent" then "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPBkddsoU1owq/A9W4CuaUY+cYA5otZ2ejivt6CbwSyi" else "";
-in
-{
+{ config, pkgs, lib, publicKey, ...  }: {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "jonathan";
@@ -51,7 +46,7 @@ in
     enable = true;
     delta.enable = true;
     userName = "Jonathan Morley";
-    userEmail = email;
+    userEmail = "morley.jonathan@gmail.com";
     signing.key = publicKey;
     signing.signByDefault = true;
 
@@ -111,6 +106,40 @@ in
       gpg.format = "ssh";
       gpg."ssh".program = if pkgs.stdenv.isDarwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else "";
     };
+    includes = [
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:cvent*/**";
+        contents = {
+          user = {
+            email = "jmorley@cvent.com";
+          };
+        };
+      }
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:SHOFLO/**";
+        contents = {
+          user = {
+            email = "jmorley@cvent.com";
+          };
+        };
+      }
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:socialtables/**";
+        contents = {
+          user = {
+            email = "jmorley@cvent.com";
+          };
+        };
+      }
+      {
+        condition = "hasconfig:remote.*.url:ssh://git@*.cvent.*/**";
+        contents = {
+          user = {
+            email = "jmorley@cvent.com";
+          };
+        };
+      }
+    ];
   };
   programs.jq.enable = true;
   programs.neovim = {

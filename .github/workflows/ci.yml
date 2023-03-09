@@ -1,47 +1,27 @@
-name: Build Nix envs
+name: CI
 
 on:
   pull_request:
     branches: [main]
-    paths:
-    - '**'
-    - '!**.md'
   push:
     branches: [main]
-    paths:
-    - '**'
-    - '!**.md'
-  schedule:
-    - cron: '0 0 * * 0' # Every Sunday at midnight UTC
 
 jobs:
-
-  build-macos-env:
-    name: Build/cache macOS Nix env
+  build-macos:
+    name: Build macOS Nix env
     runs-on: macos-latest
-
     steps:
-
     - name: Checkout repository
       uses: actions/checkout@v3
-
     - name: Install Nix
       uses: cachix/install-nix-action@v18
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-
-    - name: Setup Cachix
-      uses: cachix/cachix-action@v12
-      with:
-        name: jonathanmorley
-        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-
     - name: If scheduled, update inputs
       if: ${{ github.event_name == 'schedule' && success() }}
       run: |
         nix flake update
-
     - name: Build and switch to nix-darwin env
       run: |
         # Create /run directory
@@ -49,12 +29,9 @@ jobs:
         /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t &>/dev/null || true
         # Prevent conflict between Cachix installed by workflow and the one installed in the config
         nix-env --set-flag priority 1 cachix
-        # Build and switch to bootstrap config
-        nix build .#darwinConfigurations.bootstrap-x86.system
-        ./result/sw/bin/darwin-rebuild switch --flake .#bootstrap-x86
-        # Build and switch to full config
-        /run/current-system/sw/bin/fish -c 'darwin-rebuild switch --flake .#githubCI'
-
+        # Build and switch to github-ci config
+        nix build .#darwinConfigurations.github-ci.system
+        ./result/sw/bin/darwin-rebuild switch --flake .#github-ci
     - name: If scheduled, push commit with updated inputs
       if: ${{ github.event_name == 'schedule' && success() }}
       run: |
@@ -63,31 +40,3 @@ jobs:
         git aa
         git cm "Update inputs"
         git push
-
-  build-linux-env:
-    name: Build/cache Linux Nix env
-    runs-on: ubuntu-latest
-
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Install Nix
-      uses: cachix/install-nix-action@v17
-      with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-
-    - name: Setup Cachix
-      uses: cachix/cachix-action@v11
-      with:
-        name: jonathanmorley
-        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-
-    - name: Build and switch to home-manager env
-      run: |
-        # Prevent conflict between Cachix installed by workflow and the one installed in the config
-        nix-env --set-flag priority 1 cachix
-        # Build and switch to home-manager env
-        nix build .#homeConfigurations.malo.activationPackage; ./result/activate
