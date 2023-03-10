@@ -1,6 +1,9 @@
 # See https://daiderd.com/nix-darwin/manual/index.html#sec-options
 
 { pkgs, lib, config, specialArgs, ... }:
+let
+  netskope = (specialArgs // { netskope = false; }).netskope;
+in
 {
   # Nix configuration
   nix.settings = {
@@ -51,7 +54,7 @@
   };
 
   security.pam.enableSudoTouchIdAuth = true;
-  security.pki.certificateFiles = if specialArgs.netskope then [
+  security.pki.certificateFiles = if netskope then [
     "/Library/Application Support/Netskope/STAgent/download/nscacert.pem"
   ] else [];
 
