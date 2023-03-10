@@ -228,10 +228,14 @@
   programs.topgrade = {
     enable = true;
     settings = {
+      assume_yes = true;
+      cleanup = true;
       disable = [
-        "rustup"
         "node"
         "pip3"
+        "pnpm"
+        "rustup"
+        "yarn"
       ];
     };
   };
@@ -258,17 +262,18 @@
     };
   };
 
-  home.packages = [
-    pkgs.awscli2
-    pkgs.dotnet-sdk_7
-    pkgs.fd
-    pkgs.ipcalc
-    pkgs.nodejs
-    pkgs.powershell
-    pkgs.python3
-    pkgs.ripgrep
-    pkgs.rustup
-    pkgs.rtx
+  home.packages = with pkgs; [
+    awscli2
+    dotnet-sdk_7
+    fd
+    ipcalc
+    nodejs
+    powershell
+    python3
+    ripgrep
+    rustup
+    rtx
+    unixtools.watch
   ];
 
   home.sessionPath = [

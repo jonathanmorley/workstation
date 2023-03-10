@@ -1,6 +1,6 @@
 # See https://daiderd.com/nix-darwin/manual/index.html#sec-options
 
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, specialArgs, ... }:
 {
   # Nix configuration
   nix.settings = {
@@ -51,6 +51,9 @@
   };
 
   security.pam.enableSudoTouchIdAuth = true;
+  security.pki.certificateFiles = if specialArgs.netskope then [
+    "/Library/Application Support/Netskope/STAgent/download/nscacert.pem"
+  ] else [];
 
   system.defaults.ActivityMonitor.IconType = 5; # CPU Usage
   system.defaults.NSGlobalDomain = {

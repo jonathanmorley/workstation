@@ -7,7 +7,7 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # Nix Darwin
-    darwin.url = "github:lnl7/nix-darwin/master";
+    darwin.url = "github:jonathanmorley/nix-darwin/fix-cacerts-with-spaces";
     darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # Home Manager
@@ -37,17 +37,16 @@
         # GitHub
         "github-ci" = darwin.lib.darwinSystem {
           system = "x86_64-darwin";
-          modules = darwinModules ++ homeModules {
-            publicKey = "";
-          };
+          modules = darwinModules 
+          ++ homeModules { publicKey = ""; };
         };
 
-        # Work MacBook Air
+        # Cvent MacBook Air
         "FVFFT3XKQ6LR" = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
-          modules = darwinModules ++ homeModules {
-            publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPBkddsoU1owq/A9W4CuaUY+cYA5otZ2ejivt6CbwSyi";
-          };
+          specialArgs.netskope = true;
+          modules = darwinModules
+          ++ homeModules { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW"; };
         };
       };
     };
