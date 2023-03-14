@@ -15,16 +15,19 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # Extra Packages
+    pkgs.url = "./pkgs";
     rtx.url = "github:jonathanmorley/rtx/nix-macos";
     rtx.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, rtx, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, rtx, pkgs, ... }:
     let
       darwinModules = [./darwin.nix];
       homeModules = { publicKey, ... }: [
         home-manager.darwinModules.home-manager {
-          nixpkgs.overlays = [ rtx.overlay ];
+          nixpkgs.overlays = [ pkgs.overlay rtx.overlay ];
+          nixpkgs.config.allowUnfree = true;
+
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = { inherit publicKey; };

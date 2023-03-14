@@ -263,22 +263,22 @@
   };
 
   home.packages = with pkgs; [
+    _1password
     awscli2
     dotnet-sdk_7
     fd
     ipcalc
     nodejs
+    oktaws
     powershell
     python3
     ripgrep
-    rustup
     rtx
+    rustup
     unixtools.watch
   ];
 
-  home.sessionPath = [
-    "$HOME/.cargo/bin"
-  ];
+  home.sessionPath = [ "$HOME/.cargo/bin" ];
 
   home.sessionVariables = {
     LESSHISTFILE = "${config.xdg.stateHome}/less/history";
@@ -290,11 +290,6 @@
     darwin-switch = "(cd /tmp && darwin-rebuild switch --flake ~/.nixpkgs)";
   };
 
-  home.file.".asdfrc" = {
-    text = "legacy_version_file = yes";
-  };
-
-  home.file.".ssh/id.pub" = {
-    text = publicKey;
-  };
+  home.file.".asdfrc" = { text = "legacy_version_file = yes"; };
+  home.file.".ssh/id.pub" = { text = publicKey; };
 }

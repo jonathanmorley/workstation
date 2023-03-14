@@ -89,12 +89,25 @@
         "type": "github"
       }
     },
+    "pkgs": {
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-jsTb02Caq9djYzSjpyjsYMco5cuXXTriUxdm/3Wg5n8=",
+        "path": "/nix/store/w9nqskibnxr433qxgw881ylbswh891xr-source/pkgs",
+        "type": "path"
+      },
+      "original": {
+        "path": "/nix/store/w9nqskibnxr433qxgw881ylbswh891xr-source/pkgs",
+        "type": "path"
+      }
+    },
     "root": {
       "inputs": {
         "darwin": "darwin",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "pkgs": "pkgs",
         "rtx": "rtx"
       }
     },
