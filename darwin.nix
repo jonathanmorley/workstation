@@ -54,9 +54,7 @@ in
   };
 
   security.pam.enableSudoTouchIdAuth = true;
-  security.pki.certificateFiles = if netskope then [
-    "/Library/Application Support/Netskope/STAgent/download/nscacert.pem"
-  ] else [];
+  security.pki.certificateFiles = lib.optional netskope "/Library/Application Support/Netskope/STAgent/download/nscacert.pem";
 
   system.defaults.ActivityMonitor.IconType = 5; # CPU Usage
   system.defaults.NSGlobalDomain = {

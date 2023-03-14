@@ -290,6 +290,5 @@
     darwin-switch = "(cd /tmp && darwin-rebuild switch --flake ~/.nixpkgs)";
   };
 
-  home.file.".asdfrc" = { text = "legacy_version_file = yes"; };
   home.file.".ssh/id.pub" = { text = publicKey; };
 }
