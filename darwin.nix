@@ -2,7 +2,8 @@
 
 { pkgs, lib, config, specialArgs, ... }:
 let
-  netskope = (specialArgs // { netskope = false; }).netskope;
+  personal = builtins.elem "personal" specialArgs.profiles;
+  cvent = builtins.elem "cvent" specialArgs.profiles;
 in
 {
   # Nix configuration
@@ -44,17 +45,12 @@ in
       "lulu"
       "microsoft-office"
       "raycast"
-      "slack"
-      "tailscale"
-      "teamviewer"
-      "visual-studio-code"
       "warp"
-      "zoom"
-    ];
+    ] ++ lib.optional personal "teamviewer";
   };
 
   security.pam.enableSudoTouchIdAuth = true;
-  security.pki.certificateFiles = lib.optional netskope "/Library/Application Support/Netskope/STAgent/download/nscacert.pem";
+  security.pki.certificateFiles = lib.optional cvent "/Library/Application Support/Netskope/STAgent/download/nscacert.pem";
 
   system.defaults.ActivityMonitor.IconType = 5; # CPU Usage
   system.defaults.NSGlobalDomain = {

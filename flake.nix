@@ -23,33 +23,35 @@
   outputs = { self, nixpkgs, darwin, home-manager, rtx, pkgs, ... }:
     let
       darwinModules = [./darwin.nix];
-      homeModules = { publicKey, ... }: [
+      homeModules = { publicKey ? null, profiles ? [], ... }: [
         home-manager.darwinModules.home-manager {
           nixpkgs.overlays = [ pkgs.overlay rtx.overlay ];
           nixpkgs.config.allowUnfree = true;
 
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit publicKey; };
+          home-manager.extraSpecialArgs = { inherit publicKey profiles; };
           home-manager.users.jonathan = import ./home.nix;
         }
       ];
     in
     {
       darwinConfigurations = rec {
-        # GitHub
-        "github-ci" = darwin.lib.darwinSystem {
+        # CI
+        "ci" = darwin.lib.darwinSystem {
           system = "x86_64-darwin";
-          modules = darwinModules 
-          ++ homeModules { publicKey = ""; };
+          modules = darwinModules ++ homeModules {};
         };
 
         # Cvent MacBook Air
-        "FVFFT3XKQ6LR" = darwin.lib.darwinSystem {
+        "FVFFT3XKQ6LR" = darwin.lib.darwinSystem rec {
           system = "aarch64-darwin";
-          specialArgs.netskope = true;
-          modules = darwinModules
-          ++ homeModules { publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW"; };
+          specialArgs.profiles = ["cvent"];
+
+          modules = darwinModules ++ homeModules {
+            profiles = specialArgs.profiles;
+            publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
+          };
         };
       };
     };

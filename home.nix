@@ -1,6 +1,13 @@
 # See https://nix-community.github.io/home-manager/options.html
 
-{ config, pkgs, lib, publicKey, ...  }: {
+{ config, pkgs, lib, publicKey, profiles, ...  }:
+let
+  personal = builtins.elem "personal" profiles;
+  cvent = builtins.elem "cvent" profiles;
+
+  tomlFormat = pkgs.formats.toml { };
+in
+{
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "jonathan";
@@ -16,21 +23,6 @@
   # changes in each release.
   home.stateVersion = "22.11";
 
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      window.dimensions = {
-        lines = 50;
-        columns = 200;
-      };
-      window.padding = {
-        x = 2;
-        y = 2;
-      };
-      window.decorations = "buttonless";
-      font.normal.family = "FiraCode Nerd Font";
-    };
-  };
   programs.bat.enable = true;
   programs.exa = {
     enable = true;
@@ -106,7 +98,7 @@
       gpg.format = "ssh";
       gpg."ssh".program = if pkgs.stdenv.isDarwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else "";
     };
-    includes = [
+    includes = if cvent then [
       {
         condition = "hasconfig:remote.*.url:git@github.com:cvent*/**";
         contents = {
@@ -139,7 +131,7 @@
           };
         };
       }
-    ];
+    ] else [];
   };
   programs.jq.enable = true;
   programs.neovim = {
@@ -239,7 +231,6 @@
       ];
     };
   };
-  programs.zellij.enable = false;
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
@@ -276,7 +267,11 @@
     rtx
     rustup
     unixtools.watch
-  ];
+    vscode
+  ]
+  ++ lib.optional personal tailscale
+  ++ lib.optional cvent slack
+  ++ lib.optional cvent zoom-us;
 
   home.sessionPath = [ "$HOME/.cargo/bin" ];
 
@@ -291,4 +286,11 @@
   };
 
   home.file.".ssh/id.pub" = { text = publicKey; };
+  home.file.".config/rtx/config.toml" = {
+    source = tomlFormat.generate "rtx.toml" {
+      settings = {
+        missing_runtime_behavior = "autoinstall";
+      };
+    };
+  };
 }
