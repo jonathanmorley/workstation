@@ -23,7 +23,7 @@
   outputs = { self, nixpkgs, darwin, home-manager, rtx, pkgs, ... }:
     let
       darwinModules = [./darwin.nix];
-      homeModules = { publicKey ? null, profiles ? [], ... }: [
+      homeModules = { publicKey, profiles, ... }: [
         home-manager.darwinModules.home-manager {
           nixpkgs.overlays = [ pkgs.overlay rtx.overlay ];
           nixpkgs.config.allowUnfree = true;
@@ -37,12 +37,15 @@
     in
     {
       darwinConfigurations = rec {
-        # CI
-        "ci" = darwin.lib.darwinSystem {
+        # GitHub CI
+        "ci" = darwin.lib.darwinSystem rec {
           system = "x86_64-darwin";
           specialArgs.profiles = [];
 
-          modules = darwinModules ++ homeModules {};
+          modules = darwinModules ++ homeModules {
+            profiles = specialArgs.profiles;
+            publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMaD+wDTOJWGZa2PdaPVPTEsq1gte3zGOCI6DrUfk65k";
+          };
         };
 
         # Cvent MacBook Air

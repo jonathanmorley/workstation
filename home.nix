@@ -39,9 +39,8 @@ in
     delta.enable = true;
     userName = "Jonathan Morley";
     userEmail = "morley.jonathan@gmail.com";
-    signing.key = lib.mkIf (publicKey != null) publicKey;
+    signing.key = publicKey;
     signing.signByDefault = true;
-
     ignores = (if pkgs.stdenv.isDarwin then [
       ### macOS ###
       # General
@@ -285,7 +284,7 @@ in
     darwin-switch = "(cd /tmp && darwin-rebuild switch --flake ~/.nixpkgs)";
   };
 
-  home.file.".ssh/id.pub" = lib.mkIf (publicKey != null) { text = publicKey; };
+  home.file.".ssh/id.pub" = { text = publicKey; };
   home.file.".config/rtx/config.toml" = {
     source = tomlFormat.generate "rtx.toml" {
       settings = {
