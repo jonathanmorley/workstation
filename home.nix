@@ -39,7 +39,7 @@ in
     delta.enable = true;
     userName = "Jonathan Morley";
     userEmail = "morley.jonathan@gmail.com";
-    signing.key = publicKey;
+    signing.key = lib.mkIf (publicKey != null) publicKey;
     signing.signByDefault = true;
 
     ignores = (if pkgs.stdenv.isDarwin then [
@@ -96,9 +96,9 @@ in
       push.default = "current";
       init.defaultBranch = "main";
       gpg.format = "ssh";
-      gpg."ssh".program = if pkgs.stdenv.isDarwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else "";
+      gpg."ssh".program = lib.mkIf pkgs.stdenv.isDarwin "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
     };
-    includes = if cvent then [
+    includes = lib.mkIf cvent [
       {
         condition = "hasconfig:remote.*.url:git@github.com:cvent*/**";
         contents = {
@@ -131,7 +131,7 @@ in
           };
         };
       }
-    ] else [];
+    ];
   };
   programs.jq.enable = true;
   programs.neovim = {
@@ -285,7 +285,7 @@ in
     darwin-switch = "(cd /tmp && darwin-rebuild switch --flake ~/.nixpkgs)";
   };
 
-  home.file.".ssh/id.pub" = { text = publicKey; };
+  home.file.".ssh/id.pub" = lib.mkIf (publicKey != null) { text = publicKey; };
   home.file.".config/rtx/config.toml" = {
     source = tomlFormat.generate "rtx.toml" {
       settings = {

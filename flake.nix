@@ -40,6 +40,8 @@
         # CI
         "ci" = darwin.lib.darwinSystem {
           system = "x86_64-darwin";
+          specialArgs.profiles = [];
+
           modules = darwinModules ++ homeModules {};
         };
 
