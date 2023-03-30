@@ -255,8 +255,10 @@ in
   home.packages = with pkgs; [
     _1password
     awscli2
+    coreutils
     dotnet-sdk_7
     fd
+    findutils
     ipcalc
     nodejs
     oktaws
@@ -272,7 +274,7 @@ in
   ++ lib.optional cvent slack
   ++ lib.optional cvent zoom-us;
 
-  home.sessionPath = [ "$HOME/.cargo/bin" ];
+  home.sessionPath = [ "$HOME/.cargo/bin" "$HOME/.rd/bin" ];
 
   home.sessionVariables = {
     LESSHISTFILE = "${config.xdg.stateHome}/less/history";
@@ -280,6 +282,7 @@ in
 
   home.shellAliases = {
     cat = "bat";
+    docker = "nerdctl";
     dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
     darwin-switch = "(cd /tmp && darwin-rebuild switch --flake ~/.nixpkgs)";
   };

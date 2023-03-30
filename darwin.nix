@@ -17,8 +17,8 @@ in
   environment.systemPath = [ config.homebrew.brewPrefix ];
   environment.shells = with pkgs; [ zsh ];
   environment.systemPackages = with pkgs; [
-    # For python compilation
-    gettext
+    gettext  # For compiling Python
+    gnupg    # For fetching Java
   ];
 
   fonts = {
@@ -40,10 +40,11 @@ in
     taps = ["homebrew/cask"];
     casks = [
       "1password"
-      "docker"
+      "rancher"
       "firefox"
       "lulu"
-      "microsoft-office"
+      "microsoft-excel"
+      "microsoft-outlook"
       "raycast"
       "warp"
     ] ++ lib.optional personal "teamviewer";

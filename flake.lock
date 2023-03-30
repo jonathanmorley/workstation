@@ -93,11 +93,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-jsTb02Caq9djYzSjpyjsYMco5cuXXTriUxdm/3Wg5n8=",
-        "path": "/nix/store/sb4yjnsj2pcnjhy085k4k1g28bx7iyzg-source/pkgs",
+        "path": "/nix/store/21i9qkmh07kjaags2pwn9gs65ss6qm81-source/pkgs",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/sb4yjnsj2pcnjhy085k4k1g28bx7iyzg-source/pkgs",
+        "path": "/nix/store/21i9qkmh07kjaags2pwn9gs65ss6qm81-source/pkgs",
         "type": "path"
       }
     },
