@@ -16,7 +16,7 @@
 
     # Extra Packages
     pkgs.url = "./pkgs";
-    rtx.url = "github:jonathanmorley/rtx/nix-macos";
+    rtx.url = "github:jdxcode/rtx";
     rtx.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 

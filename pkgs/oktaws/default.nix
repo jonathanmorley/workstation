@@ -11,7 +11,12 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-Avo43iP5IDDStR1lEaE4DcGZlQHUu6PiPx0Udi3iqT8=";
   };
 
-  cargoSha256 = "sha256-vFh22L/gXZkS2k7s6Qp7TbenUMypBplBCC6R2g3Lvl4=";
+  cargoLock = {
+    lockFile = ./Cargo.lock;
+    outputHashes = {
+      "tracing-tree-0.2.0" = "sha256-/JNeAKjAXmKPh0et8958yS7joORDbid9dhFB0VUAhZc=";
+    };
+  };
 
   buildInputs = lib.optional stdenv.isDarwin pkgs.darwin.Security;
 

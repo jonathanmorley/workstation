@@ -21,7 +21,7 @@ in
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "22.11";
+  home.stateVersion = "23.05";
 
   programs.bat.enable = true;
   programs.exa = {
@@ -257,8 +257,10 @@ in
     awscli2
     coreutils
     dotnet-sdk_7
+    du-dust
     fd
     findutils
+    groff # Needed by awscli
     ipcalc
     nodejs
     oktaws
@@ -282,7 +284,7 @@ in
 
   home.shellAliases = {
     cat = "bat";
-    docker = "nerdctl";
+    #docker = "nerdctl";
     dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
     darwin-switch = "(cd /tmp && darwin-rebuild switch --flake ~/.nixpkgs)";
   };
