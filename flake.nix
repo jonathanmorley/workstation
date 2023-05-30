@@ -18,14 +18,15 @@
     pkgs.url = "./pkgs";
     rtx.url = "github:jdxcode/rtx";
     rtx.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, rtx, pkgs, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, rtx, pkgs, firefox-darwin, ... }:
     let
       darwinModules = [./darwin.nix];
       homeModules = { publicKey, profiles, ... }: [
         home-manager.darwinModules.home-manager {
-          nixpkgs.overlays = [ pkgs.overlay rtx.overlay ];
+          nixpkgs.overlays = [ pkgs.overlay rtx.overlay firefox-darwin.overlay ];
           nixpkgs.config.allowUnfree = true;
 
           home-manager.useGlobalPkgs = true;

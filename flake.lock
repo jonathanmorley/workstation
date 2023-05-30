@@ -21,6 +21,24 @@
         "type": "github"
       }
     },
+    "firefox-darwin": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1685148600,
+        "narHash": "sha256-EEZbJcu7ejwQ/iI7dwwHlN64oy6l47HNZ9GRLjPid24=",
+        "owner": "bandithedoge",
+        "repo": "nixpkgs-firefox-darwin",
+        "rev": "3f5b42ff211b42f07a64e0687c31b6c6fefd4e8a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bandithedoge",
+        "repo": "nixpkgs-firefox-darwin",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1678901627,
@@ -58,16 +76,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1659446231,
-        "narHash": "sha256-hekabNdTdgR/iLsgce5TGWmfIDZ86qjPhxDg/8TlzhE=",
-        "owner": "nixos",
+        "lastModified": 1639237670,
+        "narHash": "sha256-RTdL4rEQcgaZGpvtDgkp3oK/V+1LM3I53n0ACPSroAQ=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "eabc38219184cc3e04a974fe31857d8e0eac098d",
+        "rev": "edfb969386ebe6c3cf8f878775a7975cd88f926d",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-21.11-darwin",
+        "owner": "NixOS",
+        "ref": "master",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -88,23 +106,40 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1659446231,
+        "narHash": "sha256-hekabNdTdgR/iLsgce5TGWmfIDZ86qjPhxDg/8TlzhE=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "eabc38219184cc3e04a974fe31857d8e0eac098d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-21.11-darwin",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "pkgs": {
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-Bunl48PYeSnEXgmn/vQw0LSOW8cohjw0WupXioTOTyY=",
-        "path": "/nix/store/nf7jjjg31jd625rax0865hd0bxb1bpa0-source/pkgs",
+        "path": "/nix/store/1znrhvvy13nkp2bwc3r1mgmns6z9a7lv-source/pkgs",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/nf7jjjg31jd625rax0865hd0bxb1bpa0-source/pkgs",
+        "path": "/nix/store/1znrhvvy13nkp2bwc3r1mgmns6z9a7lv-source/pkgs",
         "type": "path"
       }
     },
     "root": {
       "inputs": {
         "darwin": "darwin",
+        "firefox-darwin": "firefox-darwin",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "pkgs": "pkgs",
         "rtx": "rtx"

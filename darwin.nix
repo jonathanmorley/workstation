@@ -41,14 +41,11 @@ in
     casks = [
       "1password"
       "rancher"
-      "firefox"
       "lulu"
-      "raycast"
       "warp"
     ]
     ++ lib.optional cvent "microsoft-excel"
-    ++ lib.optional cvent "microsoft-outlook"
-    ++ lib.optional personal "teamviewer";
+    ++ lib.optional cvent "microsoft-outlook";
   };
 
   security.pam.enableSudoTouchIdAuth = true;

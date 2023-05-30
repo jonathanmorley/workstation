@@ -260,12 +260,14 @@ in
     du-dust
     fd
     findutils
+    firefox-bin
     groff # Needed by awscli
     ipcalc
     nodejs
     oktaws
     powershell
     python3
+    raycast
     ripgrep
     rtx
     rustup
@@ -273,6 +275,7 @@ in
     vscode
   ]
   ++ lib.optional personal tailscale
+  ++ lib.optional personal teamviewer
   ++ lib.optional cvent slack
   ++ lib.optional cvent zoom-us;
 
