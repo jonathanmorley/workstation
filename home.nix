@@ -221,16 +221,22 @@ in
     settings = {
       misc = {
         assume_yes = true;
+        pre_sudo = true;
         cleanup = true;
         disable = [
           "containers"
           "dotnet"
+          "helm"
           "node"
+          "nix"
           "pip3"
           "pnpm"
           "rustup"
           "yarn"
         ];
+      };
+      commands = {
+        Nix = "cd /tmp && nix flake update ~/.nixpkgs && darwin-rebuild switch --flake ~/.nixpkgs";
       };
     };
   };
@@ -294,9 +300,7 @@ in
 
   home.shellAliases = {
     cat = "bat";
-    #docker = "nerdctl";
     dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
-    darwin-switch = "(cd /tmp && darwin-rebuild switch --flake ~/.nixpkgs)";
   };
 
   home.file.".ssh/id.pub" = { text = publicKey; };
