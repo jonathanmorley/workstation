@@ -21,7 +21,7 @@ in
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "23.05";
+  home.stateVersion = "23.11";
 
   programs.bat.enable = true;
   programs.exa = {
@@ -219,15 +219,19 @@ in
   programs.topgrade = {
     enable = true;
     settings = {
-      assume_yes = true;
-      cleanup = true;
-      disable = [
-        "node"
-        "pip3"
-        "pnpm"
-        "rustup"
-        "yarn"
-      ];
+      misc = {
+        assume_yes = true;
+        cleanup = true;
+        disable = [
+          "containers"
+          "dotnet"
+          "node"
+          "pip3"
+          "pnpm"
+          "rustup"
+          "yarn"
+        ];
+      };
     };
   };
   programs.zsh = {
@@ -236,7 +240,7 @@ in
     history.path = "${config.xdg.dataHome}/zsh/zsh_history";
     enableAutosuggestions = true;
     enableCompletion = true;
-    enableSyntaxHighlighting = true;
+    syntaxHighlighting.enable = true;
     initExtraBeforeCompInit = ''
       eval "$(${pkgs.rtx}/bin/rtx activate -s zsh)"
     '';
@@ -260,11 +264,13 @@ in
     du-dust
     fd
     findutils
-    firefox-bin
     groff # Needed by awscli
     ipcalc
     nodejs
     oktaws
+    openssl
+    openssl.dev
+    pkg-config
     powershell
     python3
     raycast
@@ -283,6 +289,7 @@ in
 
   home.sessionVariables = {
     LESSHISTFILE = "${config.xdg.stateHome}/less/history";
+    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 
   home.shellAliases = {

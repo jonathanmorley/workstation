@@ -3,7 +3,7 @@
 
   inputs = {
     # NixPkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-21.11-darwin";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-23.05-darwin";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # Nix Darwin
@@ -15,18 +15,17 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # Extra Packages
-    pkgs.url = "./pkgs";
+    oktaws.url = "github:jonathanmorley/oktaws";
     rtx.url = "github:jdxcode/rtx";
     rtx.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, rtx, pkgs, firefox-darwin, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, rtx, oktaws, ... }:
     let
       darwinModules = [./darwin.nix];
       homeModules = { publicKey, profiles, ... }: [
         home-manager.darwinModules.home-manager {
-          nixpkgs.overlays = [ pkgs.overlay rtx.overlay firefox-darwin.overlay ];
+          nixpkgs.overlays = [ oktaws.overlay rtx.overlay ];
           nixpkgs.config.allowUnfree = true;
 
           home-manager.useGlobalPkgs = true;

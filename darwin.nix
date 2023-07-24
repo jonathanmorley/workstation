@@ -9,9 +9,13 @@ in
   # Nix configuration
   nix.settings = {
     trusted-users = ["@admin"];
-    auto-optimise-store = true;
+    # https://github.com/NixOS/nix/issues/7273
+    auto-optimise-store = false;
     experimental-features = "nix-command flakes";
   };
+
+  # https://github.com/LnL7/nix-darwin/issues/701
+  documentation.enable = false;
 
   environment.pathsToLink = [ "/share/zsh" ];
   environment.systemPath = [ config.homebrew.brewPrefix ];
@@ -37,9 +41,10 @@ in
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
-    taps = ["homebrew/cask"];
     casks = [
       "1password"
+      # 1password extension does not like nix-installed FF
+      "firefox"
       "rancher"
       "lulu"
       "warp"
