@@ -47,6 +47,7 @@ in
       "firefox"
       "rancher"
       "lulu"
+      "visual-studio-code"
       "warp"
     ]
     ++ lib.optional cvent "microsoft-excel"

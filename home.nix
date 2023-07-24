@@ -236,7 +236,7 @@ in
         ];
       };
       commands = {
-        Nix = "cd /tmp && nix flake update ~/.nixpkgs && darwin-rebuild switch --flake ~/.nixpkgs";
+        Nix = "darwin-rebuild switch --recreate-lock-file --flake ~/.nixpkgs";
       };
     };
   };
@@ -284,7 +284,6 @@ in
     rtx
     rustup
     unixtools.watch
-    vscode
   ]
   ++ lib.optional personal tailscale
   ++ lib.optional personal teamviewer
