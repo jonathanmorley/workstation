@@ -46,12 +46,23 @@ in
       # 1password extension does not like nix-installed FF
       "firefox"
       "rancher"
-      "lulu"
       "visual-studio-code"
       "warp"
     ]
+    ++ lib.optional personal "lulu"
     ++ lib.optional cvent "microsoft-excel"
     ++ lib.optional cvent "microsoft-outlook";
+  };
+
+  launchd.user.agents = {
+    # _1password = {
+    #   command = "/Applications/1Password.app";
+    # };
+    raycast = {
+      serviceConfig = {
+        Program = "${pkgs.raycast}/Applications/Raycast.app/Contents/Library/LoginItems/RaycastLauncher.app";
+      };
+    };
   };
 
   security.pam.enableSudoTouchIdAuth = true;

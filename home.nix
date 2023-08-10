@@ -24,6 +24,7 @@ in
   home.stateVersion = "23.11";
 
   programs.bat.enable = true;
+  programs.direnv.enable = true;
   programs.exa = {
     enable = true;
     enableAliases = true;
@@ -96,6 +97,8 @@ in
       init.defaultBranch = "main";
       gpg.format = "ssh";
       gpg."ssh".program = lib.mkIf pkgs.stdenv.isDarwin "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      http.postBuffer = 2097152000;
+      https.postBuffer = 2097152000;
     };
     includes = lib.mkIf cvent [
       {
@@ -266,6 +269,8 @@ in
     _1password
     awscli2
     coreutils
+    dasel
+    devbox
     dotnet-sdk_7
     du-dust
     fd
