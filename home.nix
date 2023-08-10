@@ -282,7 +282,6 @@ in
     openssl
     openssl.dev
     pkg-config
-    powershell
     python3
     raycast
     ripgrep
