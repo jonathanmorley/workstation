@@ -252,6 +252,7 @@ in
     syntaxHighlighting.enable = true;
     initExtraBeforeCompInit = ''
       eval "$(${pkgs.rtx}/bin/rtx activate -s zsh)"
+      export PATH="''${PATH}:''${HOME}/.cargo/bin"
     '';
     oh-my-zsh = {
       enable = true;
@@ -271,6 +272,7 @@ in
     coreutils
     dasel
     devbox
+    docker-client
     dotnet-sdk_7
     du-dust
     fd
@@ -283,7 +285,6 @@ in
     openssl.dev
     pkg-config
     python3
-    raycast
     ripgrep
     rtx
     rustup
@@ -294,17 +295,12 @@ in
   ++ lib.optional cvent slack
   ++ lib.optional cvent zoom-us;
 
-  home.sessionPath = [ "$HOME/.cargo/bin" "$HOME/.rd/bin" ];
-
-  home.sessionVariables = {
-    LESSHISTFILE = "${config.xdg.stateHome}/less/history";
-    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
-  };
-
   home.shellAliases = {
     cat = "bat";
     dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
   };
+
+  # home.sessionVariables and home.sessionPath do not work on MacOS
 
   home.file.".ssh/id.pub" = { text = publicKey; };
   home.file.".config/rtx/config.toml" = {
