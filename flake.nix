@@ -14,18 +14,16 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
-    # Extra Packages
+    # Oktaws
     oktaws.url = "github:jonathanmorley/oktaws";
-    rtx.url = "github:jdxcode/rtx";
-    rtx.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, rtx, oktaws, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, oktaws, ... }:
     let
       darwinModules = [./darwin.nix];
       homeModules = { publicKey, profiles, ... }: [
         home-manager.darwinModules.home-manager {
-          nixpkgs.overlays = [ oktaws.overlay rtx.overlay ];
+          nixpkgs.overlays = [ oktaws.overlay ];
           nixpkgs.config.allowUnfree = true;
 
           home-manager.useGlobalPkgs = true;
