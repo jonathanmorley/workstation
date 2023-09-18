@@ -23,7 +23,12 @@ in
   environment.systemPackages = with pkgs; [
     gettext  # For compiling Python
     gnupg    # For fetching Java
+    colima   # For docker
   ];
+
+  environment.variables = {
+    DOCKER_HOST = "unix:///Users/jonathan/.colima/default/docker.sock";
+  };
 
   fonts = {
     fontDir.enable = true;
