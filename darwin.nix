@@ -50,12 +50,12 @@ in
       "1password"
       # 1password extension does not like nix-installed FF
       "firefox"
-      "podman-desktop"
       "raycast"
       "visual-studio-code"
       "warp"
     ]
     ++ lib.optional personal "lulu"
+    ++ lib.optional cvent "amazon-chime"
     ++ lib.optional cvent "microsoft-excel"
     ++ lib.optional cvent "microsoft-outlook";
   };

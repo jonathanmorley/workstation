@@ -271,7 +271,6 @@ in
     awscli2
     coreutils
     dasel
-    devbox
     docker-client
     dotnet-sdk_7
     du-dust
