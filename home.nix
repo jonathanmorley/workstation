@@ -1,6 +1,6 @@
 # See https://nix-community.github.io/home-manager/options.html
 
-{ config, pkgs, lib, publicKey, profiles, ...  }:
+{ config, pkgs, lib, publicKey, profiles, username, ...  }:
 let
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
@@ -10,8 +10,8 @@ in
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
-  home.username = "jonathan";
-  home.homeDirectory = lib.mkForce (if pkgs.stdenv.isDarwin then  "/Users/jonathan" else "/home/jonathan");
+  home.username = username;
+  home.homeDirectory = lib.mkForce (if pkgs.stdenv.isDarwin then  "/Users/${username}" else "/home/${username}");
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage

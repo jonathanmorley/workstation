@@ -21,15 +21,15 @@
   outputs = { self, nixpkgs, darwin, home-manager, oktaws, ... }:
     let
       darwinModules = [./darwin.nix];
-      homeModules = { publicKey, profiles, ... }: [
+      homeModules = { publicKey, profiles, username, ... }: [
         home-manager.darwinModules.home-manager {
           nixpkgs.overlays = [ oktaws.overlay ];
           nixpkgs.config.allowUnfree = true;
 
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit publicKey profiles; };
-          home-manager.users.jonathan = import ./home.nix;
+          home-manager.extraSpecialArgs = { inherit publicKey profiles username; };
+          home-manager.users."${username}" = import ./home.nix;
         }
       ];
     in
@@ -43,6 +43,7 @@
           modules = darwinModules ++ homeModules {
             profiles = specialArgs.profiles;
             publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMaD+wDTOJWGZa2PdaPVPTEsq1gte3zGOCI6DrUfk65k";
+            username = "jonathan";
           };
         };
 
@@ -54,6 +55,19 @@
           modules = darwinModules ++ homeModules {
             profiles = specialArgs.profiles;
             publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
+            username = "jonathan";
+          };
+        };
+
+        # Cvent MacBook Pro
+        "C02C9B4MMD6R" = darwin.lib.darwinSystem rec {
+          system = "x86_64-darwin";
+          specialArgs.profiles = ["cvent"];
+
+          modules = darwinModules ++ homeModules {
+            profiles = specialArgs.profiles;
+            publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
+            username = "jmorley";
           };
         };
       };
