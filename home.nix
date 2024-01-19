@@ -1,4 +1,4 @@
-# See https://nix-community.github.io/home-manager/options.html
+# See https://nix-community.github.io/home-manager/options.xhtml
 
 { config, pkgs, lib, publicKey, profiles, username, ...  }:
 let
@@ -139,44 +139,6 @@ in
   programs.neovim = {
     defaultEditor = true;
     enable = true;
-    coc = {
-      enable = true;
-      # Trigger completion on <c-space>
-      # Accept suggestions with <cr>
-      pluginConfig = ''
-        inoremap <silent><expr> <c-space> coc#refresh()
-        inoremap <silent><expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-      '';
-    };
-    plugins = with pkgs.vimPlugins; [
-      airline
-      coc-docker
-      coc-eslint
-      coc-git
-      coc-java
-      coc-jest
-      coc-json
-      coc-prettier
-      coc-pyright
-      coc-python
-      coc-rust-analyzer
-      coc-sh
-      coc-toml
-      coc-tsserver
-      coc-yaml
-      {
-        plugin = nerdtree;
-        # Start NERDTree and put the cursor back in the other window.
-        # Close the tab if NERDTree is the only window remaining in it.
-        config = ''
-          autocmd VimEnter * NERDTree | wincmd p
-          autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-        '';
-      }
-      nerdtree-git-plugin
-      sleuth
-    ];
-    extraConfig = "let NERDTreeShowHidden=1";
     viAlias = true;
     vimAlias = true;
   };
@@ -251,7 +213,7 @@ in
     enableCompletion = true;
     syntaxHighlighting.enable = true;
     initExtraBeforeCompInit = ''
-      eval "$(${pkgs.rtx}/bin/rtx activate -s zsh)"
+      eval "$(${pkgs.mise}/bin/mise activate -s zsh)"
       export PATH="''${PATH}:''${HOME}/.cargo/bin"
     '';
     oh-my-zsh = {
@@ -278,6 +240,7 @@ in
     findutils
     groff # Needed by awscli
     ipcalc
+    mise
     nodejs
     oktaws
     openssl
@@ -285,7 +248,6 @@ in
     pkg-config
     python3
     ripgrep
-    rtx
     rustup
     unixtools.watch
   ]
@@ -302,11 +264,9 @@ in
   # home.sessionVariables and home.sessionPath do not work on MacOS
 
   home.file.".ssh/id.pub" = { text = publicKey; };
-  home.file.".config/rtx/config.toml" = {
-    source = tomlFormat.generate "rtx.toml" {
-      settings = {
-        missing_runtime_behavior = "autoinstall";
-      };
+  home.file.".config/mise/settings.toml" = {
+    source = tomlFormat.generate "mise.toml" {
+      not_found_auto_install = true;
     };
   };
 }
