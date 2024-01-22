@@ -14,9 +14,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@main
+      uses: DeterminateSystems/nix-installer-action@v9
       with:
-        extra-conf: "extra-experimental-features = nix-command"
+        extra-conf: "extra-experimental-features = nix-command flakes"
     - name: Install nix-darwin
       run: |
         mkdir -p ~/.config/nix-darwin
