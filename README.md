@@ -1,3 +1,5 @@
+[![CI](https://github.com/jonathanmorley/nixpkgs/actions/workflows/ci.yml/badge.svg)](https://github.com/jonathanmorley/nixpkgs/actions/workflows/ci.yml)
+
 # Nixpkgs
 
 > Provision a workstation.
