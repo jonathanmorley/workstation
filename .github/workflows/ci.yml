@@ -17,6 +17,8 @@ jobs:
       uses: DeterminateSystems/nix-installer-action@v9
       with:
         extra-conf: "extra-experimental-features = nix-command flakes"
+    - name: Cache Nix
+      uses: DeterminateSystems/magic-nix-cache-action@v2
     - name: Install nix-darwin
       run: |
         mkdir -p ~/.config/nix-darwin
