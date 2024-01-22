@@ -1,6 +1,6 @@
 # See https://nix-community.github.io/home-manager/options.xhtml
 
-{ config, pkgs, lib, publicKey, profiles, username, ...  }:
+{ config, pkgs, lib, profiles, username, ...  }:
 let
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
@@ -40,7 +40,7 @@ in
     delta.enable = true;
     userName = "Jonathan Morley";
     userEmail = "morley.jonathan@gmail.com";
-    signing.key = publicKey;
+    signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
     signing.signByDefault = true;
     ignores = (if pkgs.stdenv.isDarwin then [
       ### macOS ###
@@ -85,10 +85,7 @@ in
 
       # .nfs files are created when an open file is removed but is still being accessed
       ".nfs*"
-    ]) ++ [
-      # direnv integration
-      ".envrc"
-    ];
+    ]);
     extraConfig = {
       fetch.prune = true;
       rebase.autosquash = true;
@@ -102,10 +99,42 @@ in
     };
     includes = lib.mkIf cvent [
       {
-        condition = "hasconfig:remote.*.url:git@github.com:cvent*/**";
+        condition = "hasconfig:remote.*.url:git@github.com:cvent/**";
         contents = {
           user = {
             email = "jmorley@cvent.com";
+          };
+        };
+      }
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:cvent-internal*/**";
+        contents = {
+          user = {
+            email = "jmorley@cvent.com";
+            signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
+          };
+          core = {
+            sshCommand = "ssh -o IdentitiesOnly=yes -i ~/.ssh/cvent.pub -F /dev/null";
+          };
+        };
+      }
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:cvent-test/**";
+        contents = {
+          user = {
+            email = "jmorley@cvent.com";
+          };
+        };
+      }
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:cvent-test-internal/**";
+        contents = {
+          user = {
+            email = "jmorley@cvent.com";
+            signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
+          };
+          core = {
+            sshCommand = "ssh -o IdentitiesOnly=yes -i ~/.ssh/cvent.pub -F /dev/null";
           };
         };
       }
@@ -148,7 +177,7 @@ in
     hashKnownHosts = true;
     matchBlocks."*" = {
       extraOptions.IdentityAgent = if pkgs.stdenv.isDarwin then "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"" else "";
-      identityFile = "~/.ssh/id.pub";
+      identityFile = "~/.ssh/personal.pub";
       identitiesOnly = true;
     };
   };
@@ -238,7 +267,9 @@ in
     du-dust
     fd
     findutils
-    groff # Needed by awscli
+    gettext  # For compiling Python
+    gnupg    # For fetching Java
+    groff    # Needed by awscli
     ipcalc
     mise
     nodejs
@@ -263,10 +294,18 @@ in
 
   # home.sessionVariables and home.sessionPath do not work on MacOS
 
-  home.file.".ssh/id.pub" = { text = publicKey; };
-  home.file.".config/mise/settings.toml" = {
-    source = tomlFormat.generate "mise.toml" {
-      not_found_auto_install = true;
+  home.file = {
+    ".ssh/personal.pub" = {
+      text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
+    };
+    ".config/mise/settings.toml" = {
+      source = tomlFormat.generate "mise.toml" {
+        not_found_auto_install = true;
+      };
+    };
+  } // lib.optionalAttrs cvent {
+    ".ssh/cvent.pub" = {
+      text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
     };
   };
 }

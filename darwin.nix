@@ -21,8 +21,6 @@ in
   environment.systemPath = [ config.homebrew.brewPrefix ];
   environment.shells = with pkgs; [ zsh ];
   environment.systemPackages = with pkgs; [
-    gettext  # For compiling Python
-    gnupg    # For fetching Java
     colima   # For docker
   ];
 
@@ -55,7 +53,6 @@ in
       "warp"
     ]
     ++ lib.optional personal "lulu"
-    ++ lib.optional cvent "amazon-chime"
     ++ lib.optional cvent "microsoft-excel"
     ++ lib.optional cvent "microsoft-outlook";
   };

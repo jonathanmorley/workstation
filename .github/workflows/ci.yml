@@ -15,26 +15,12 @@ jobs:
       uses: actions/checkout@v3
     - name: Install Nix
       uses: DeterminateSystems/nix-installer-action@main
-    - name: Setup nix-darwin
+    - name: Install nix-darwin
       run: |
-        # From https://github.com/LnL7/nix-darwin/blob/master/pkgs/darwin-installer/installer.nix#L40-L56
-        if ! grep -q '^run\b' /etc/synthetic.conf 2>/dev/null; then
-          echo "setting up /run via /etc/synthetic.conf..."
-          echo -e "run\tprivate/var/run" | sudo tee -a /etc/synthetic.conf >/dev/null
-          /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -B &>/dev/null || true
-          /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t &>/dev/null || true
-          if ! test -L /run; then
-            echo "warning: apfs.util failed to symlink /run"
-          fi
-        fi
-        if ! test -L /run; then
-            echo "setting up /run..."
-            sudo ln -sfn private/var/run /run
-        fi
-        if ! test -L /run; then
-          echo "warning: failed to symlink /run"
-        fi
-    - name: Build nix-darwin ci env
-      run: nix build .#darwinConfigurations.ci.system
+        mkdir -p ~/.config/nix-darwin
+        cd ~/.config/nix-darwin
+        nix flake init -t nix-darwin
+        sed -i '' "s/simple/$(scutil --get LocalHostName)/" flake.nix
+        nix run nix-darwin -- switch --flake ~/.config/nix-darwin
     - name: Switch to nix-darwin ci env
-      run: ./result/sw/bin/darwin-rebuild switch --flake .#ci
+      run: darwin-rebuild switch --flake .#ci
