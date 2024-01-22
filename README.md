@@ -1,27 +1,15 @@
-# Workstation
+# Nixpkgs
 
-> Bootstrap a workstation
+> Provision a workstation.
 
 ## Setup (MacOS)
 
-1. Install [nix](https://nixos.org/download.html)
-2. Install [nix-darwin](https://github.com/LnL7/nix-darwin#manual-install)
-```
-# Add the `/run` directory
-echo -e "run\tprivate/var/run" | sudo tee -a /etc/synthetic.conf
-/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
-
-# Add the nix-darwin channel
-nix-channel --add https://github.com/LnL7/nix-darwin/archive/master.tar.gz darwin
-nix-channel --update
-```
-3. Clone and open the repository
-```
-git clone https://github.com/jonathanmorley/nixpkgs.git ~/.nixpkgs
-cd ~/.nixpkgs
-```
-5. Add host to config file
-6. Run `./result/sw/bin/darwin-rebuild switch --flake ~/.nixpkgs`
+1. Install [nix](https://nixos.org/):
+    * [Graphical Installer](https://install.determinate.systems/nix-installer-pkg/stable/Universal)
+    * CLI: `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
+1. Clone the repository: `git clone https://github.com/jonathanmorley/nixpkgs.git ~/.nixpkgs`
+1. Add host config block to [flake.nix](~/.nixpkgs/flake.nix).
+1. Run `nix --extra-experimental-features 'nix-command flakes' run nix-darwin -- switch --flake ~/.nixpkgs` to apply changes.
 
 ## Resources
 
