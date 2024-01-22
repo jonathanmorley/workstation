@@ -24,23 +24,19 @@ jobs:
   build-macos:
     name: Build macOS Nix env
     needs: [check]
-    if: needs.check.outputs.last_sha != github.sha
+    if: github.event_name != 'schedule' || needs.check.outputs.last_sha != github.sha
     runs-on: macos-latest
     steps:
-    - run: whoami
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Install Nix
       uses: DeterminateSystems/nix-installer-action@v9
-      with:
-        extra-conf: "extra-experimental-features = nix-command flakes"
     - name: Cache Nix
       uses: DeterminateSystems/magic-nix-cache-action@v2
-    - name: Switch to nix-darwin ci env
+    - name: Backup config files
       run: |
         sudo mv /etc/nix/nix.conf{,.before-nix-darwin}
         sudo mv /etc/shells{,.before-nix-darwin}
         sudo mv /etc/zshenv{,.before-nix-darwin}
-
-        nix --extra-experimental-features 'nix-command flakes' \
-          run nix-darwin -- switch --flake .#ci
+    - name: Switch to nix-darwin ci env
+      run: nix run nix-darwin -- switch --flake .#ci
