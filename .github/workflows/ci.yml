@@ -20,5 +20,6 @@ jobs:
     - name: Cache Nix
       uses: DeterminateSystems/magic-nix-cache-action@v2
     - name: Switch to nix-darwin ci env
-      run: nix --extra-experimental-features 'nix-command flakes' \
-        run nix-darwin -- switch --flake .#ci
+      run: |
+        nix --extra-experimental-features 'nix-command flakes' \
+          run nix-darwin -- switch --flake .#ci
