@@ -42,7 +42,7 @@
 
           modules = darwinModules ++ homeModules {
             profiles = specialArgs.profiles;
-            username = "jonathan";
+            username = "runner";
           };
         };
 
