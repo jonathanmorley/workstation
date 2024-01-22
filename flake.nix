@@ -16,55 +16,82 @@
 
     # Oktaws
     oktaws.url = "github:jonathanmorley/oktaws";
+
+    # Flake-parts
+    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, oktaws, ... }:
-    let
-      darwinModules = [./darwin.nix];
-      homeModules = { profiles, username, ... }: [
-        home-manager.darwinModules.home-manager {
-          nixpkgs.overlays = [ oktaws.overlay ];
-          nixpkgs.config.allowUnfree = true;
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    darwin,
+    home-manager,
+    oktaws,
+    flake-parts,
+    ...
+  }: let
+    darwinModules = [./darwin.nix];
+    homeModules = {
+      profiles,
+      username,
+      ...
+    }: [
+      home-manager.darwinModules.home-manager
+      {
+        nixpkgs.overlays = [oktaws.overlay];
+        nixpkgs.config.allowUnfree = true;
 
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit profiles username; };
-          home-manager.users."${username}" = import ./home.nix;
-        }
-      ];
-    in
-    {
-      darwinConfigurations = rec {
-        # GitHub CI
-        "ci" = darwin.lib.darwinSystem rec {
-          system = "x86_64-darwin";
-          specialArgs.profiles = [];
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.extraSpecialArgs = {inherit profiles username;};
+        home-manager.users."${username}" = import ./home.nix;
+      }
+    ];
+  in
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
+      perSystem = {pkgs, ...}: {
+        formatter = pkgs.alejandra;
+      };
+      flake = {
+        darwinConfigurations = rec {
+          # GitHub CI
+          "ci" = darwin.lib.darwinSystem rec {
+            system = "x86_64-darwin";
+            specialArgs.profiles = [];
 
-          modules = darwinModules ++ homeModules {
-            profiles = specialArgs.profiles;
-            username = "runner";
+            modules =
+              darwinModules
+              ++ homeModules {
+                profiles = specialArgs.profiles;
+                username = "runner";
+              };
           };
-        };
 
-        # Cvent MacBook Air
-        "FVFFT3XKQ6LR" = darwin.lib.darwinSystem rec {
-          system = "aarch64-darwin";
-          specialArgs.profiles = ["cvent"];
+          # Cvent MacBook Air
+          "FVFFT3XKQ6LR" = darwin.lib.darwinSystem rec {
+            system = "aarch64-darwin";
+            specialArgs.profiles = ["cvent"];
 
-          modules = darwinModules ++ homeModules {
-            profiles = specialArgs.profiles;
-            username = "jonathan";
+            modules =
+              darwinModules
+              ++ homeModules {
+                profiles = specialArgs.profiles;
+                username = "jonathan";
+              };
           };
-        };
 
-        # Cvent MacBook Pro
-        "C02C9B4MMD6R" = darwin.lib.darwinSystem rec {
-          system = "x86_64-darwin";
-          specialArgs.profiles = ["cvent"];
+          # Cvent MacBook Pro
+          "C02C9B4MMD6R" = darwin.lib.darwinSystem rec {
+            system = "x86_64-darwin";
+            specialArgs.profiles = ["cvent"];
 
-          modules = darwinModules ++ homeModules {
-            profiles = specialArgs.profiles;
-            username = "jmorley";
+            modules =
+              darwinModules
+              ++ homeModules {
+                profiles = specialArgs.profiles;
+                username = "jmorley";
+              };
           };
         };
       };

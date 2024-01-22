@@ -1,20 +1,28 @@
 # See https://nix-community.github.io/home-manager/options.xhtml
-
-{ config, pkgs, lib, profiles, username, ...  }:
-let
+{
+  config,
+  pkgs,
+  lib,
+  profiles,
+  username,
+  ...
+}: let
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
 
   personalPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
   cventPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
 
-  tomlFormat = pkgs.formats.toml { };
-in
-{
+  tomlFormat = pkgs.formats.toml {};
+in {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = username;
-  home.homeDirectory = lib.mkForce (if pkgs.stdenv.isDarwin then  "/Users/${username}" else "/home/${username}");
+  home.homeDirectory = lib.mkForce (
+    if pkgs.stdenv.isDarwin
+    then "/Users/${username}"
+    else "/home/${username}"
+  );
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -45,50 +53,53 @@ in
     userEmail = "morley.jonathan@gmail.com";
     signing.key = personalPublicKey;
     signing.signByDefault = true;
-    ignores = (if pkgs.stdenv.isDarwin then [
-      ### macOS ###
-      # General
-      ".DS_Store"
-      ".AppleDouble"
-      ".LSOverride"
+    ignores =
+      if pkgs.stdenv.isDarwin
+      then [
+        ### macOS ###
+        # General
+        ".DS_Store"
+        ".AppleDouble"
+        ".LSOverride"
 
-      # Icon must end with two \r
-      "Icon"
+        # Icon must end with two \r
+        "Icon"
 
-      # Thumbnails
-      "._*"
+        # Thumbnails
+        "._*"
 
-      # Files that might appear in the root of a volume
-      ".DocumentRevisions-V100"
-      ".fseventsd"
-      ".Spotlight-V100"
-      ".TemporaryItems"
-      ".Trashes"
-      ".VolumeIcon.icns"
-      ".com.apple.timemachine.donotpresent"
+        # Files that might appear in the root of a volume
+        ".DocumentRevisions-V100"
+        ".fseventsd"
+        ".Spotlight-V100"
+        ".TemporaryItems"
+        ".Trashes"
+        ".VolumeIcon.icns"
+        ".com.apple.timemachine.donotpresent"
 
-      # Directories potentially created on remote AFP share
-      ".AppleDB"
-      ".AppleDesktop"
-      "Network Trash Folder"
-      "Temporary Items"
-      ".apdisk"
-    ] else [
-      ### Linux ###
-      "*~"
+        # Directories potentially created on remote AFP share
+        ".AppleDB"
+        ".AppleDesktop"
+        "Network Trash Folder"
+        "Temporary Items"
+        ".apdisk"
+      ]
+      else [
+        ### Linux ###
+        "*~"
 
-      # temporary files which can be created if a process still has a handle open of a deleted file
-      ".fuse_hidden*"
+        # temporary files which can be created if a process still has a handle open of a deleted file
+        ".fuse_hidden*"
 
-      # KDE directory preferences
-      ".directory"
+        # KDE directory preferences
+        ".directory"
 
-      # Linux trash folder which might appear on any partition or disk
-      ".Trash-*"
+        # Linux trash folder which might appear on any partition or disk
+        ".Trash-*"
 
-      # .nfs files are created when an open file is removed but is still being accessed
-      ".nfs*"
-    ]);
+        # .nfs files are created when an open file is removed but is still being accessed
+        ".nfs*"
+      ];
     extraConfig = {
       fetch.prune = true;
       rebase.autosquash = true;
@@ -179,7 +190,10 @@ in
     enable = true;
     hashKnownHosts = true;
     matchBlocks."*" = {
-      extraOptions.IdentityAgent = if pkgs.stdenv.isDarwin then "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"" else "";
+      extraOptions.IdentityAgent =
+        if pkgs.stdenv.isDarwin
+        then "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\""
+        else "";
       identityFile = builtins.toFile "personal.pub" personalPublicKey;
       identitiesOnly = true;
     };
@@ -260,35 +274,36 @@ in
     };
   };
 
-  home.packages = with pkgs; [
-    _1password
-    awscli2
-    coreutils
-    dasel
-    docker-client
-    dotnet-sdk_7
-    du-dust
-    fd
-    gettext  # For compiling Python
-    gnupg    # For fetching Java
-    groff    # Needed by awscli
-    ipcalc
-    mise
-    nodejs
-    oktaws
-    openssl
-    openssl.dev
-    pkg-config
-    python3
-    ripgrep
-    rustup
-    tree
-    unixtools.watch
-  ]
-  ++ lib.optional personal tailscale
-  ++ lib.optional personal teamviewer
-  ++ lib.optional cvent slack
-  ++ lib.optional cvent zoom-us;
+  home.packages = with pkgs;
+    [
+      _1password
+      awscli2
+      coreutils
+      dasel
+      docker-client
+      dotnet-sdk_7
+      du-dust
+      fd
+      gettext # For compiling Python
+      gnupg # For fetching Java
+      groff # Needed by awscli
+      ipcalc
+      mise
+      nodejs
+      oktaws
+      openssl
+      openssl.dev
+      pkg-config
+      python3
+      ripgrep
+      rustup
+      tree
+      unixtools.watch
+    ]
+    ++ lib.optional personal tailscale
+    ++ lib.optional personal teamviewer
+    ++ lib.optional cvent slack
+    ++ lib.optional cvent zoom-us;
 
   home.shellAliases = {
     cat = "bat";

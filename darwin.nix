@@ -1,11 +1,14 @@
 # See https://daiderd.com/nix-darwin/manual/index.html#sec-options
-
-{ pkgs, lib, config, specialArgs, ... }:
-let
+{
+  pkgs,
+  lib,
+  config,
+  specialArgs,
+  ...
+}: let
   personal = builtins.elem "personal" specialArgs.profiles;
   cvent = builtins.elem "cvent" specialArgs.profiles;
-in
-{
+in {
   # Nix configuration
   nix.settings = {
     trusted-users = ["@admin"];
@@ -17,11 +20,11 @@ in
   # https://github.com/LnL7/nix-darwin/issues/701
   documentation.enable = false;
 
-  environment.pathsToLink = [ "/share/zsh" ];
-  environment.systemPath = [ config.homebrew.brewPrefix ];
-  environment.shells = with pkgs; [ zsh ];
+  environment.pathsToLink = ["/share/zsh"];
+  environment.systemPath = [config.homebrew.brewPrefix];
+  environment.shells = with pkgs; [zsh];
   environment.systemPackages = with pkgs; [
-    colima   # For docker
+    colima # For docker
   ];
 
   environment.variables = {
@@ -44,17 +47,18 @@ in
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
-    casks = [
-      "1password"
-      # 1password extension does not like nix-installed FF
-      "firefox"
-      "raycast"
-      "visual-studio-code"
-      "warp"
-    ]
-    ++ lib.optional personal "lulu"
-    ++ lib.optional cvent "microsoft-excel"
-    ++ lib.optional cvent "microsoft-outlook";
+    casks =
+      [
+        "1password"
+        # 1password extension does not like nix-installed FF
+        "firefox"
+        "raycast"
+        "visual-studio-code"
+        "warp"
+      ]
+      ++ lib.optional personal "lulu"
+      ++ lib.optional cvent "microsoft-excel"
+      ++ lib.optional cvent "microsoft-outlook";
   };
 
   security.pam.enableSudoTouchIdAuth = true;
