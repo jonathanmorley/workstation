@@ -24,7 +24,7 @@ jobs:
   build-macos:
     name: Build macOS Nix env
     needs: [check]
-    if: needs.check.outputs.last_sha != github.sha
+    if: github.event_name == 'workflow_dispatch' || needs.check.outputs.last_sha != github.sha
     runs-on: macos-latest
     steps:
     - name: Checkout repository
