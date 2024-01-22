@@ -189,14 +189,11 @@ in {
   programs.ssh = {
     enable = true;
     hashKnownHosts = true;
-    matchBlocks."*" =
-      {
-        identityFile = builtins.toFile "personal.pub" personalPublicKey;
-        identitiesOnly = true;
-      }
-      // lib.optionalAttrs pkgs.stdenv.isDarwin {
-        extraOptions.IdentityAgent = "\"${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"";
-      };
+    matchBlocks."*" = {
+      identityFile = builtins.toFile "personal.pub" personalPublicKey;
+      identitiesOnly = true;
+      extraOptions.IdentityAgent = lib.mkIf pkgs.stdenv.isDarwin "\"${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"";
+    };
   };
   programs.starship = {
     enable = true;
