@@ -10,6 +10,8 @@ on:
 jobs:
   check:
     runs-on: 'ubuntu-latest'
+    permissions:
+      actions: read
     steps:
       - uses: octokit/request-action@v2.x
         id: check_last_run
@@ -39,4 +41,6 @@ jobs:
         sudo mv /etc/shells{,.before-nix-darwin}
         sudo mv /etc/zshenv{,.before-nix-darwin}
     - name: Switch to nix-darwin ci env
-      run: nix run nix-darwin -- switch --flake .#ci
+      run: |
+        nix --extra-experimental-features 'nix-command flakes' \
+          run nix-darwin -- switch --flake .#ci
