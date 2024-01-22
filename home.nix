@@ -269,7 +269,6 @@ in
     dotnet-sdk_7
     du-dust
     fd
-    findutils
     gettext  # For compiling Python
     gnupg    # For fetching Java
     groff    # Needed by awscli
@@ -283,6 +282,7 @@ in
     python3
     ripgrep
     rustup
+    tree
     unixtools.watch
   ]
   ++ lib.optional personal tailscale
