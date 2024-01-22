@@ -5,6 +5,9 @@ let
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
 
+  personalPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
+  cventPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
+
   tomlFormat = pkgs.formats.toml { };
 in
 {
@@ -40,7 +43,7 @@ in
     delta.enable = true;
     userName = "Jonathan Morley";
     userEmail = "morley.jonathan@gmail.com";
-    signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
+    signing.key = personalPublicKey;
     signing.signByDefault = true;
     ignores = (if pkgs.stdenv.isDarwin then [
       ### macOS ###
@@ -111,10 +114,10 @@ in
         contents = {
           user = {
             email = "jmorley@cvent.com";
-            signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
+            signingKey = cventPublicKey;
           };
           core = {
-            sshCommand = "ssh -o IdentitiesOnly=yes -i ~/.ssh/cvent.pub -F /dev/null";
+            sshCommand = "ssh -o IdentitiesOnly=yes -i ${builtins.toFile "cvent.pub" cventPublicKey} -F /dev/null";
           };
         };
       }
@@ -131,10 +134,10 @@ in
         contents = {
           user = {
             email = "jmorley@cvent.com";
-            signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
+            signingKey = cventPublicKey;
           };
           core = {
-            sshCommand = "ssh -o IdentitiesOnly=yes -i ~/.ssh/cvent.pub -F /dev/null";
+            sshCommand = "ssh -o IdentitiesOnly=yes -i ${builtins.toFile "cvent.pub" cventPublicKey} -F /dev/null";
           };
         };
       }
@@ -177,7 +180,7 @@ in
     hashKnownHosts = true;
     matchBlocks."*" = {
       extraOptions.IdentityAgent = if pkgs.stdenv.isDarwin then "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"" else "";
-      identityFile = "~/.ssh/personal.pub";
+      identityFile = builtins.toFile "personal.pub" personalPublicKey;
       identitiesOnly = true;
     };
   };
@@ -230,7 +233,7 @@ in
         ];
       };
       commands = {
-        Nix = "darwin-rebuild switch --recreate-lock-file --flake ~/.nixpkgs";
+        Nix = "darwin-rebuild switch --recreate-lock-file --refresh --flake ~/.nixpkgs";
       };
     };
   };
@@ -294,18 +297,9 @@ in
 
   # home.sessionVariables and home.sessionPath do not work on MacOS
 
-  home.file = {
-    ".ssh/personal.pub" = {
-      text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
-    };
-    ".config/mise/settings.toml" = {
-      source = tomlFormat.generate "mise.toml" {
-        not_found_auto_install = true;
-      };
-    };
-  } // lib.optionalAttrs cvent {
-    ".ssh/cvent.pub" = {
-      text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
+  home.file.".config/mise/settings.toml" = {
+    source = tomlFormat.generate "mise.toml" {
+      not_found_auto_install = true;
     };
   };
 }

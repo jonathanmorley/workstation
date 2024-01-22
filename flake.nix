@@ -3,16 +3,16 @@
 
   inputs = {
     # NixPkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-23.05-darwin";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-23.11-darwin";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-
-    # Nix Darwin
-    darwin.url = "github:jonathanmorley/nix-darwin/fix-cacerts-with-spaces";
-    darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # Home Manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
+    # Nix Darwin
+    darwin.url = "github:jonathanmorley/nix-darwin/fix-cacerts-with-spaces";
+    darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # Oktaws
     oktaws.url = "github:jonathanmorley/oktaws";
