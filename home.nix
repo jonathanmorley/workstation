@@ -112,6 +112,23 @@ in {
       https.postBuffer = 2097152000;
     };
     includes = lib.mkIf cvent [
+      # Use gitdir for the SSH key, because remotes aren't available
+      {
+        condition = "gitdir:**/emu/**";
+        contents = {
+          core = {
+            sshCommand = "ssh -i ${builtins.toFile "cvent.pub" cventPublicKey}";
+          };
+        };
+      }
+      {
+        condition = "gitdir:**/*-emu/**";
+        contents = {
+          core = {
+            sshCommand = "ssh -i ${builtins.toFile "cvent.pub" cventPublicKey}";
+          };
+        };
+      }
       {
         condition = "hasconfig:remote.*.url:git@github.com:cvent/**";
         contents = {
@@ -121,14 +138,11 @@ in {
         };
       }
       {
-        condition = "hasconfig:remote.*.url:git@github.com:cvent-internal*/**";
+        condition = "hasconfig:remote.*.url:git@github.com:cvent-internal/**";
         contents = {
           user = {
             email = "jmorley@cvent.com";
             signingKey = cventPublicKey;
-          };
-          core = {
-            sshCommand = "ssh -o IdentitiesOnly=yes -i ${builtins.toFile "cvent.pub" cventPublicKey} -F /dev/null";
           };
         };
       }
@@ -146,9 +160,6 @@ in {
           user = {
             email = "jmorley@cvent.com";
             signingKey = cventPublicKey;
-          };
-          core = {
-            sshCommand = "ssh -o IdentitiesOnly=yes -i ${builtins.toFile "cvent.pub" cventPublicKey} -F /dev/null";
           };
         };
       }
