@@ -110,6 +110,12 @@ in {
       gpg."ssh".program = lib.mkIf pkgs.stdenv.isDarwin "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
       http.postBuffer = 2097152000;
       https.postBuffer = 2097152000;
+      url = {
+        # Force GitHub to push with SSH
+        "ssh://git@github.com/" = {
+          pushInsteadOf = "https://github.com/";
+        };
+      };
     };
     includes = lib.mkIf cvent [
       # Use gitdir for the SSH key, because remotes aren't available
