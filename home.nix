@@ -40,12 +40,6 @@ in {
     enable = true;
     enableAliases = true;
   };
-  programs.gh = {
-    enable = true;
-    settings = {
-      git_protocol = "ssh";
-    };
-  };
   programs.git = {
     enable = true;
     delta.enable = true;
@@ -101,6 +95,14 @@ in {
         ".nfs*"
       ];
     extraConfig = {
+      credential = {
+        "https://gist.github.com" = {
+          helper = "${pkgs.gh}/bin/gh auth git-credential";
+        };
+        "https://github.com" = {
+          helper = "${pkgs.gh}/bin/gh auth git-credential";
+        };
+      };
       fetch.prune = true;
       rebase.autosquash = true;
       pull.rebase = true;
@@ -110,12 +112,6 @@ in {
       gpg."ssh".program = lib.mkIf pkgs.stdenv.isDarwin "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
       http.postBuffer = 2097152000;
       https.postBuffer = 2097152000;
-      url = {
-        # Force GitHub to push with SSH
-        "ssh://git@github.com/" = {
-          pushInsteadOf = "https://github.com/";
-        };
-      };
     };
     includes = lib.mkIf cvent [
       # Use gitdir for the SSH key, because remotes aren't available
@@ -273,7 +269,7 @@ in {
     enableCompletion = true;
     syntaxHighlighting.enable = true;
     initExtraBeforeCompInit = ''
-      eval "$(${pkgs.mise}/bin/mise activate -s zsh)"
+      eval "$(${pkgs.mise}/bin/mise activate zsh)"
       export PATH="''${PATH}:''${HOME}/.cargo/bin"
     '';
     oh-my-zsh = {
@@ -299,6 +295,7 @@ in {
       du-dust
       fd
       gettext # For compiling Python
+      gh
       gnupg # For fetching Java
       groff # Needed by awscli
       ipcalc
@@ -326,9 +323,11 @@ in {
 
   # home.sessionVariables and home.sessionPath do not work on MacOS
 
-  home.file.".config/mise/settings.toml" = {
+  home.file.".config/mise/config.toml" = {
     source = tomlFormat.generate "mise.toml" {
-      not_found_auto_install = true;
+      settings = {
+        asdf_compat = true;
+      };
     };
   };
 }
