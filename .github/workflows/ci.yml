@@ -8,48 +8,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-    steps:
-      - uses: octokit/request-action@v2.x
-        id: check_last_run
-        with:
-          route: GET /repos/${{github.repository}}/actions/workflows/ci.yml/runs?per_page=1&status=completed
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: "echo Last daily build: ${{ fromJson(steps.check_last_run.outputs.data).workflow_runs[0].head_sha }}"
-    outputs:
-      last_sha: ${{ fromJson(steps.check_last_run.outputs.data).workflow_runs[0].head_sha }}
-
   formatting:
     name: Check Formatting
     runs-on: ubuntu-latest
-    needs: [check]
-    if: github.event_name != 'schedule' || needs.check.outputs.last_sha != github.sha
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v9
       - name: Cache Nix
-        uses: DeterminateSystems/magic-nix-cache-action@v2
+        uses: DeterminateSystems/magic-nix-cache-action@v3
       - name: Check Formatting
         run: nix fmt -- --check .
 
   build-macos:
     name: Build macOS Nix env
     runs-on: macos-latest
-    needs: [check]
-    if: github.event_name != 'schedule' || needs.check.outputs.last_sha != github.sha
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Install Nix
       uses: DeterminateSystems/nix-installer-action@v9
     - name: Cache Nix
-      uses: DeterminateSystems/magic-nix-cache-action@v2
+      uses: DeterminateSystems/magic-nix-cache-action@v3
     - name: Backup config files
       run: |
         sudo mv /etc/nix/nix.conf{,.before-nix-darwin}
