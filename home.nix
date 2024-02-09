@@ -198,7 +198,11 @@ in {
     viAlias = true;
     vimAlias = true;
   };
-  programs.nix-index.enable = true;
+  programs.nix-index = {
+    enable = true;
+    enableBashIntegration = false;
+    enableZshIntegration = false;
+  };
   programs.ssh = {
     enable = true;
     hashKnownHosts = true;
