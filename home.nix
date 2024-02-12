@@ -96,11 +96,11 @@ in {
       ];
     extraConfig = {
       credential = {
-        "https://gist.github.com" = {
-          helper = "${pkgs.gh}/bin/gh auth git-credential";
-        };
         "https://github.com" = {
-          helper = "${pkgs.gh}/bin/gh auth git-credential";
+          helper = [
+            ""
+            "!${pkgs.gh}/bin/gh auth git-credential"
+          ];
         };
       };
       fetch.prune = true;
@@ -290,6 +290,7 @@ in {
       awscli2
       coreutils
       dasel
+      discord
       docker-client
       dotnet-sdk_7
       du-dust
