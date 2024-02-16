@@ -49,8 +49,8 @@ in {
     onActivation.cleanup = "uninstall";
     casks =
       [
-        "1password"
         # 1password extension does not like nix-installed FF
+        "1password"
         "firefox"
         "raycast"
         "visual-studio-code"
