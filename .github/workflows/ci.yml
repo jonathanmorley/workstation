@@ -40,3 +40,5 @@ jobs:
       run: |
         nix --extra-experimental-features 'nix-command flakes' \
           run nix-darwin -- switch --flake .#ci
+      env:
+        NIX_CONFIG="access-tokens = github.com=${ secrets.GITHUB_TOKEN }",
