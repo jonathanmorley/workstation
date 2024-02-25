@@ -93,6 +93,19 @@
                 username = "jmorley";
               };
           };
+
+          # Personal iMac
+          "smoke" = darwin.lib.darwinSystem rec {
+            system = "x86_64-darwin";
+            specialArgs.profiles = ["personal"];
+
+            modules =
+              darwinModules
+              ++ homeModules {
+                profiles = specialArgs.profiles;
+                username = "jonathan";
+              };
+          };
         };
       };
     };

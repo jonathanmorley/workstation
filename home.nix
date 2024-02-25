@@ -316,7 +316,6 @@ in {
       unixtools.watch
     ]
     ++ lib.optional personal tailscale
-    ++ lib.optional personal teamviewer
     ++ lib.optional cvent slack
     ++ lib.optional cvent zoom-us;
 

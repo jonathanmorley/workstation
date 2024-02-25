@@ -52,6 +52,7 @@ in {
         # 1password extension does not like nix-installed FF
         "1password"
         "firefox"
+        "google-chrome"
         "raycast"
         "visual-studio-code"
         "warp"
