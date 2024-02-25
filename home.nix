@@ -10,7 +10,10 @@
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
 
-  personalPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
+  personalPublicKey =
+    if personal
+    then "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBJbG+RkEeZ8WakJorykKKRPsJ1Su2c8Up/clPmuSqew"
+    else "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
   cventPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
 
   tomlFormat = pkgs.formats.toml {};
@@ -316,7 +319,6 @@ in {
       unixtools.watch
     ]
     ++ lib.optional personal tailscale
-    ++ lib.optional personal teamviewer
     ++ lib.optional cvent slack
     ++ lib.optional cvent zoom-us;
 
