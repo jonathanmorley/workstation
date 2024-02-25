@@ -38,10 +38,10 @@ jobs:
         sudo mv /etc/zshenv{,.before-nix-darwin}
     - name: Create token from GitHub App
       uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: 841015 
-          private-key: ${{ secrets.NIXPKG_DOWNLOADER_PRIVATE_KEY }}
+      id: app-token
+      with:
+        app-id: 841015 
+        private-key: ${{ secrets.NIXPKG_DOWNLOADER_PRIVATE_KEY }}
     - name: Switch to nix-darwin ci env
       run: |
         nix --extra-experimental-features 'nix-command flakes' \
