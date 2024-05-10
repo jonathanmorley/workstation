@@ -43,7 +43,10 @@ in {
     enable = true;
     delta.enable = true;
     userName = "Jonathan Morley";
-    userEmail = if cvent then "jmorley@cvent.com" else "morley.jonathan@gmail.com";
+    userEmail =
+      if cvent
+      then "jmorley@cvent.com"
+      else "morley.jonathan@gmail.com";
     signing.key = sshKeys."github.com";
     signing.signByDefault = true;
     ignores =
