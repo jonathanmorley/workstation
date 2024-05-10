@@ -66,7 +66,9 @@
               ++ homeModules {
                 profiles = specialArgs.profiles;
                 username = "runner";
-                sshKeys = {};
+                sshKeys = {
+                  "github.com" = "";
+                };
               };
           };
 
