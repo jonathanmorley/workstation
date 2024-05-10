@@ -17,18 +17,14 @@ in {
     experimental-features = "nix-command flakes";
   };
 
-  # https://github.com/LnL7/nix-darwin/issues/701
-  documentation.enable = false;
-
   environment.pathsToLink = ["/share/zsh"];
   environment.systemPath = [config.homebrew.brewPrefix];
-  environment.shells = with pkgs; [zsh];
-  environment.systemPackages = with pkgs; [
-    colima # For docker
-  ];
+  environment.shells = [pkgs.zsh];
 
   environment.variables = {
     DOCKER_HOST = "unix:///Users/jonathan/.colima/default/docker.sock";
+    PKG_CONFIG_PATH = "/usr/local/lib/pkgconfig";
+    NODE_EXTRA_CA_CERTS = lib.optional cvent "/Library/Application Support/Netskope/STAgent/download/nscacert.pem";
   };
 
   fonts = {
@@ -47,9 +43,9 @@ in {
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
+    brews = ["colima"];
     casks =
       [
-        # 1password extension does not like nix-installed FF
         "1password"
         "firefox"
         "google-chrome"
@@ -58,8 +54,8 @@ in {
         "warp"
       ]
       ++ lib.optional personal "lulu"
-      ++ lib.optional cvent "microsoft-excel"
-      ++ lib.optional cvent "microsoft-outlook";
+      ++ lib.optional cvent "microsoft-office"
+      ++ lib.optional cvent "discord";
   };
 
   security.pam.enableSudoTouchIdAuth = true;

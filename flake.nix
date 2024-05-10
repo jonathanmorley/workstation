@@ -34,6 +34,7 @@
     homeModules = {
       profiles,
       username,
+      sshKeys,
       ...
     }: [
       home-manager.darwinModules.home-manager
@@ -43,7 +44,7 @@
 
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
-        home-manager.extraSpecialArgs = {inherit profiles username;};
+        home-manager.extraSpecialArgs = {inherit profiles username sshKeys;};
         home-manager.users."${username}" = import ./home.nix;
       }
     ];
@@ -78,6 +79,10 @@
               ++ homeModules {
                 profiles = specialArgs.profiles;
                 username = "jonathan";
+                sshKeys = {
+                  "cvent" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKuaMIMcObM1KyhncM9Qndv91P5EDreRxz5pFA7xSHaX";
+                  "github.com" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
+                };
               };
           };
 
