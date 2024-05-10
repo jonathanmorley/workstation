@@ -66,6 +66,7 @@
               ++ homeModules {
                 profiles = specialArgs.profiles;
                 username = "runner";
+                sshKeys = {};
               };
           };
 
