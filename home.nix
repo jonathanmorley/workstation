@@ -5,16 +5,11 @@
   lib,
   profiles,
   username,
+  sshKeys,
   ...
 }: let
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
-
-  personalPublicKey =
-    if personal
-    then "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBJbG+RkEeZ8WakJorykKKRPsJ1Su2c8Up/clPmuSqew"
-    else "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
-  cventPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4ZtCTDz73hl3lja+B3yKSOSRVssUOpD/t7C1S19sC9";
 
   tomlFormat = pkgs.formats.toml {};
 in {
@@ -35,8 +30,9 @@ in {
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "23.11";
+  home.stateVersion = "24.05";
 
+  programs.awscli.enable = true;
   programs.bat.enable = true;
   programs.direnv.enable = true;
   programs.eza = {
@@ -47,8 +43,11 @@ in {
     enable = true;
     delta.enable = true;
     userName = "Jonathan Morley";
-    userEmail = "morley.jonathan@gmail.com";
-    signing.key = personalPublicKey;
+    userEmail =
+      if cvent
+      then "jmorley@cvent.com"
+      else "morley.jonathan@gmail.com";
+    signing.key = sshKeys."github.com";
     signing.signByDefault = true;
     ignores =
       if pkgs.stdenv.isDarwin
@@ -98,12 +97,15 @@ in {
         ".nfs*"
       ];
     extraConfig = {
+      core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
       credential = {
         "https://gist.github.com" = {
           helper = "${pkgs.gh}/bin/gh auth git-credential";
+          username = "jonathanmorley";
         };
         "https://github.com" = {
           helper = "${pkgs.gh}/bin/gh auth git-credential";
+          username = "jonathanmorley";
         };
       };
       fetch.prune = true;
@@ -116,85 +118,40 @@ in {
       http.postBuffer = 2097152000;
       https.postBuffer = 2097152000;
     };
-    includes = lib.mkIf cvent [
-      # Use gitdir for the SSH key, because remotes aren't available
-      {
-        condition = "gitdir:**/emu/**";
-        contents = {
-          core = {
-            sshCommand = "ssh -i ${builtins.toFile "cvent.pub" cventPublicKey}";
-          };
-        };
-      }
-      {
-        condition = "gitdir:**/*-emu/**";
-        contents = {
-          core = {
-            sshCommand = "ssh -i ${builtins.toFile "cvent.pub" cventPublicKey}";
-          };
-        };
-      }
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:cvent/**";
-        contents = {
-          user = {
-            email = "jmorley@cvent.com";
-          };
-        };
-      }
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:cvent-internal/**";
-        contents = {
-          user = {
-            email = "jmorley@cvent.com";
-            signingKey = cventPublicKey;
-          };
-        };
-      }
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:cvent-test/**";
-        contents = {
-          user = {
-            email = "jmorley@cvent.com";
-          };
-        };
-      }
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:cvent-test-internal/**";
-        contents = {
-          user = {
-            email = "jmorley@cvent.com";
-            signingKey = cventPublicKey;
-          };
-        };
-      }
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:SHOFLO/**";
-        contents = {
-          user = {
-            email = "jmorley@cvent.com";
-          };
-        };
-      }
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:socialtables/**";
-        contents = {
-          user = {
-            email = "jmorley@cvent.com";
-          };
-        };
-      }
-      {
-        condition = "hasconfig:remote.*.url:ssh://git@*.cvent.*/**";
-        contents = {
-          user = {
-            email = "jmorley@cvent.com";
-          };
-        };
-      }
-    ];
+    includes =
+      lib.mkIf cvent
+      (builtins.concatMap (org: [
+          # Internal GitHub
+          {
+            condition = "hasconfig:remote.*.url:git@github.com:${org}-internal/**";
+            contents = {
+              core.sshCommand = "ssh -i ${builtins.toFile "cvent.pub" sshKeys.cvent}";
+              user.signingKey = sshKeys.cvent;
+              credential = {
+                "https://gist.github.com" = {
+                  username = "JMorley_cvent";
+                };
+                "https://github.com" = {
+                  username = "JMorley_cvent";
+                };
+              };
+            };
+          }
+        ]) ["cvent" "cvent-archive" "cvent-incubator" "cvent-test" "icapture" "jifflenow" "SHOFLO" "socialtables" "weddingspot"]
+        ++ [
+          # Stash
+          {
+            condition = "hasconfig:remote.*.url:ssh://git@*.cvent.*/**";
+            contents = {
+              core.sshCommand = "ssh -i ${builtins.toFile "cvent.pub" sshKeys.cvent}";
+              user.signingKey = sshKeys.cvent;
+            };
+          }
+        ]);
   };
+  programs.java.enable = true;
   programs.jq.enable = true;
+  programs.mise.enable = true;
   programs.neovim = {
     defaultEditor = true;
     enable = true;
@@ -206,13 +163,17 @@ in {
     enableBashIntegration = false;
     enableZshIntegration = false;
   };
+  programs.ripgrep.enable = true;
   programs.ssh = {
     enable = true;
     hashKnownHosts = true;
     matchBlocks."*" = {
-      identityFile = builtins.toFile "personal.pub" personalPublicKey;
+      identityFile = lib.mkIf (builtins.hasAttr "ssh" sshKeys) (builtins.toFile "ssh.pub" sshKeys."ssh");
       identitiesOnly = true;
       extraOptions.IdentityAgent = lib.mkIf pkgs.stdenv.isDarwin "\"${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"";
+    };
+    matchBlocks."*.cvent.*" = lib.mkIf cvent {
+      user = "jmorley";
     };
   };
   programs.starship = {
@@ -276,7 +237,6 @@ in {
     enableCompletion = true;
     syntaxHighlighting.enable = true;
     initExtraBeforeCompInit = ''
-      eval "$(${pkgs.mise}/bin/mise activate zsh)"
       export PATH="''${PATH}:''${HOME}/.cargo/bin"
     '';
     oh-my-zsh = {
@@ -294,26 +254,26 @@ in {
   home.packages = with pkgs;
     [
       _1password
-      awscli2
       coreutils
       dasel
       docker-client
+      docker-buildx
       dotnet-sdk_7
       du-dust
       fd
       gettext # For compiling Python
-      gh
+      gh # Don't use programs.gh, it does too much.
       gnupg # For fetching Java
+      gnugrep
       groff # Needed by awscli
       ipcalc
-      mise
       nodejs
+      nodePackages.pnpm
       oktaws
       openssl
       openssl.dev
       pkg-config
       python3
-      ripgrep
       rustup
       tree
       unixtools.watch
@@ -325,14 +285,20 @@ in {
   home.shellAliases = {
     cat = "bat";
     dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
+    gls = ''git log --pretty='format:' --name-only | grep -oP "^''$(git rev-parse --show-prefix)\K.*" | cut -d/ -f1 | sort -u'';
   };
 
   # home.sessionVariables and home.sessionPath do not work on MacOS
 
-  home.file.".config/mise/config.toml" = {
-    source = tomlFormat.generate "mise.toml" {
-      settings = {
-        asdf_compat = true;
+  home.file."pypoetry config" = {
+    target =
+      if pkgs.stdenv.isDarwin
+      then "Library/Application Support/pypoetry/config.toml"
+      else "${config.xdg.configHome}/pypoetry/config.toml";
+    source = tomlFormat.generate "pypoetry.toml" {
+      virtualenvs = {
+        "prefer-active-python" = true;
+        "in-project" = true;
       };
     };
   };
