@@ -10,8 +10,6 @@
 }: let
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
-
-  tomlFormat = pkgs.formats.toml {};
 in {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
@@ -236,8 +234,10 @@ in {
     enableAutosuggestions = true;
     enableCompletion = true;
     syntaxHighlighting.enable = true;
-    initExtraBeforeCompInit = ''
+    initExtra = ''
       export PATH="''${PATH}:''${HOME}/.cargo/bin"
+      # We want shims so that commands executed without a shell still use mise
+      eval "$(${lib.getExe pkgs.mise} activate --shims zsh)"
     '';
     oh-my-zsh = {
       enable = true;
@@ -290,16 +290,19 @@ in {
 
   # home.sessionVariables and home.sessionPath do not work on MacOS
 
-  home.file."pypoetry config" = {
-    target =
-      if pkgs.stdenv.isDarwin
-      then "Library/Application Support/pypoetry/config.toml"
-      else "${config.xdg.configHome}/pypoetry/config.toml";
-    source = tomlFormat.generate "pypoetry.toml" {
-      virtualenvs = {
-        "prefer-active-python" = true;
-        "in-project" = true;
-      };
+  home.file."colima template" = lib.mkIf pkgs.stdenv.isDarwin {
+    target = ".colima/_templates/default.yaml";
+    source = (pkgs.formats.yaml {}).generate "default.yaml" {
+      vmType = "vz";
+      rosetta = true;
+      network.address = true;
+      mounts = [
+        {
+          location = "/private/var/folders";
+          mountPoint = "/private/var/folders";
+          writable = true;
+        }
+      ];
     };
   };
 }

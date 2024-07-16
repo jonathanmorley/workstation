@@ -23,7 +23,7 @@ in {
 
   environment.variables = {
     DOCKER_HOST = "unix:///Users/jonathan/.colima/default/docker.sock";
-    PKG_CONFIG_PATH = "/usr/local/lib/pkgconfig";
+    PKG_CONFIG_PATH = "${config.homebrew.brewPrefix}/../lib/pkgconfig";
     NODE_EXTRA_CA_CERTS = lib.optional cvent "/Library/Application Support/Netskope/STAgent/download/nscacert.pem";
   };
 
