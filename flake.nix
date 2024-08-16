@@ -2,23 +2,22 @@
   description = "Jonathan's Configurations";
 
   inputs = {
-    # NixPkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-23.11-darwin";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-
-    # Home Manager
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
-
-    # Nix Darwin
-    darwin.url = "github:jonathanmorley/nix-darwin/fix-cacerts-with-spaces";
-    darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
-
-    # Oktaws
-    oktaws.url = "github:jonathanmorley/oktaws";
-
-    # Flake-parts
-    flake-parts.url = "github:hercules-ci/flake-parts";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    darwin = {
+      url = "github:jonathanmorley/nix-darwin/fix-cacerts-with-spaces";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    oktaws = {
+      url = "github:jonathanmorley/oktaws";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+    };
   };
 
   outputs = inputs @ {
@@ -39,7 +38,7 @@
     }: [
       home-manager.darwinModules.home-manager
       {
-        nixpkgs.overlays = [oktaws.overlay];
+        nixpkgs.overlays = [oktaws.overlays.default];
         nixpkgs.config.allowUnfree = true;
 
         home-manager.useGlobalPkgs = true;

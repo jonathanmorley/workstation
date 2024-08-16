@@ -33,10 +33,7 @@ in {
   programs.awscli.enable = true;
   programs.bat.enable = true;
   programs.direnv.enable = true;
-  programs.eza = {
-    enable = true;
-    enableAliases = true;
-  };
+  programs.eza.enable = true;
   programs.git = {
     enable = true;
     delta.enable = true;
@@ -174,35 +171,7 @@ in {
       user = "jmorley";
     };
   };
-  programs.starship = {
-    enable = true;
-    settings = {
-      aws.symbol = "  ";
-      conda.symbol = " ";
-      dart.symbol = " ";
-      directory.read_only = " ";
-      docker_context.symbol = " ";
-      elixir.symbol = " ";
-      elm.symbol = " ";
-      git_branch.symbol = " ";
-      golang.symbol = " ";
-      hg_branch.symbol = " ";
-      java.symbol = " ";
-      julia.symbol = " ";
-      memory_usage.symbol = " ";
-      nim.symbol = " ";
-      nix_shell.symbol = " ";
-      package.symbol = " ";
-      perl.symbol = " ";
-      php.symbol = " ";
-      python.symbol = " ";
-      ruby.symbol = " ";
-      rust.symbol = " ";
-      scala.symbol = " ";
-      shlvl.symbol = " ";
-      swift.symbol = "ﯣ ";
-    };
-  };
+  programs.starship.enable = true;
   programs.topgrade = {
     enable = true;
     settings = {
@@ -231,13 +200,11 @@ in {
     enable = true;
     dotDir = ".config/zsh";
     history.path = "${config.xdg.dataHome}/zsh/zsh_history";
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     enableCompletion = true;
     syntaxHighlighting.enable = true;
     initExtra = ''
       export PATH="''${PATH}:''${HOME}/.cargo/bin"
-      # We want shims so that commands executed without a shell still use mise
-      eval "$(${lib.getExe pkgs.mise} activate --shims zsh)"
     '';
     oh-my-zsh = {
       enable = true;
@@ -258,11 +225,12 @@ in {
       dasel
       docker-client
       docker-buildx
+      dogdns
       dotnet-sdk_7
       du-dust
+      duf
       fd
       gettext # For compiling Python
-      gh # Don't use programs.gh, it does too much.
       gnupg # For fetching Java
       gnugrep
       groff # Needed by awscli
@@ -278,6 +246,7 @@ in {
       tree
       unixtools.watch
     ]
+    ++ lib.optional (! pkgs.stdenv.isDarwin) gh
     ++ lib.optional personal tailscale
     ++ lib.optional cvent slack
     ++ lib.optional cvent zoom-us;
@@ -293,13 +262,24 @@ in {
   home.file."colima template" = lib.mkIf pkgs.stdenv.isDarwin {
     target = ".colima/_templates/default.yaml";
     source = (pkgs.formats.yaml {}).generate "default.yaml" {
+      runtime = "docker";
       vmType = "vz";
       rosetta = true;
       network.address = true;
       mounts = [
         {
+          location = "/tmp/colima";
+          mountPoint = "/tmp/colima";
+          writable = true;
+        }
+        {
           location = "/private/var/folders";
           mountPoint = "/private/var/folders";
+          writable = true;
+        }
+        {
+          location = "/Users/${username}";
+          mountPoint = "/Users/${username}";
           writable = true;
         }
       ];
