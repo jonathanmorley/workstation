@@ -256,7 +256,7 @@ in {
     cat = "bat";
     dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
     gls = ''git log --pretty='format:' --name-only | grep -oP "^''$(git rev-parse --show-prefix)\K.*" | cut -d/ -f1 | sort -u'';
-    nix-clean = "sudo nix-collect-garbage --delete-old";
+    nix-clean = "sudo nix-collect-garbage --delete-older-than 30d";
   };
 
   # home.sessionVariables and home.sessionPath do not work on MacOS
