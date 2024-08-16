@@ -221,6 +221,7 @@ in {
         pre_sudo = true;
         cleanup = true;
         disable = [
+          "cargo"
           "containers"
           "dotnet"
           "helm"
@@ -296,6 +297,7 @@ in {
     cat = "bat";
     dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
     gls = ''git log --pretty='format:' --name-only | grep -oP "^''$(git rev-parse --show-prefix)\K.*" | cut -d/ -f1 | sort -u'';
+    nix-clean = "sudo nix-collect-garbage --delete-old";
   };
 
   # home.sessionVariables and home.sessionPath do not work on MacOS
