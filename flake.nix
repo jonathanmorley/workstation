@@ -88,19 +88,6 @@
               };
           };
 
-          # Cvent MacBook Pro
-          "C02C9B4MMD6R" = darwin.lib.darwinSystem rec {
-            system = "x86_64-darwin";
-            specialArgs.profiles = ["cvent"];
-
-            modules =
-              darwinModules
-              ++ homeModules {
-                profiles = specialArgs.profiles;
-                username = "jmorley";
-              };
-          };
-
           # Personal iMac
           "smoke" = darwin.lib.darwinSystem rec {
             system = "x86_64-darwin";
