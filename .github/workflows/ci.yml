@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: '30 2 * * *'  # Nightly at 2:30
+    - cron: '0 0 1 * *'  # Monthly
   workflow_dispatch:
 
 jobs:
