@@ -17,24 +17,23 @@ in {
     experimental-features = "nix-command flakes";
   };
 
+  documentation.enable = false;
+
   environment.pathsToLink = ["/share/zsh"];
   environment.systemPath = [config.homebrew.brewPrefix];
   environment.shells = [pkgs.zsh];
 
   environment.variables = {
     DOCKER_HOST = "unix:///Users/jonathan/.colima/default/docker.sock";
-    PKG_CONFIG_PATH = "/usr/local/lib/pkgconfig";
+    PKG_CONFIG_PATH = "${config.homebrew.brewPrefix}/../lib/pkgconfig";
     NODE_EXTRA_CA_CERTS = lib.optional cvent "/Library/Application Support/Netskope/STAgent/download/nscacert.pem";
   };
 
-  fonts = {
-    fontDir.enable = true;
-    fonts = [
-      (pkgs.nerdfonts.override {
-        fonts = ["FiraCode"];
-      })
-    ];
-  };
+  fonts.packages = [
+    (pkgs.nerdfonts.override {
+      fonts = ["FiraCode"];
+    })
+  ];
 
   programs.zsh.enable = true;
 
@@ -43,10 +42,11 @@ in {
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
-    brews = ["colima"];
+    brews = ["gh" "colima"];
     casks =
       [
         "1password"
+        "disk-inventory-x"
         "firefox"
         "google-chrome"
         "raycast"
@@ -54,7 +54,8 @@ in {
         "warp"
       ]
       ++ lib.optional personal "lulu"
-      ++ lib.optional cvent "microsoft-office"
+      ++ lib.optional cvent "microsoft-outlook"
+      ++ lib.optional cvent "microsoft-excel"
       ++ lib.optional cvent "discord";
   };
 
