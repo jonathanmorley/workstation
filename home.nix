@@ -10,11 +10,6 @@
 }: let
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
-<<<<<<< HEAD
-=======
-
-  tomlFormat = pkgs.formats.toml {};
->>>>>>> 37a0326 (add gls alias)
 in {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
@@ -43,14 +38,10 @@ in {
     enable = true;
     delta.enable = true;
     userName = "Jonathan Morley";
-<<<<<<< HEAD
     userEmail =
       if cvent
       then "jmorley@cvent.com"
       else "morley.jonathan@gmail.com";
-=======
-    userEmail = if cvent then "jmorley@cvent.com" else "morley.jonathan@gmail.com";
->>>>>>> 37a0326 (add gls alias)
     signing.key = sshKeys."github.com";
     signing.signByDefault = true;
     ignores =
@@ -178,38 +169,6 @@ in {
     };
     matchBlocks."*.cvent.*" = lib.mkIf cvent {
       user = "jmorley";
-<<<<<<< HEAD
-=======
-    };
-  };
-  programs.starship = {
-    enable = true;
-    settings = {
-      aws.symbol = "  ";
-      conda.symbol = " ";
-      dart.symbol = " ";
-      directory.read_only = " ";
-      docker_context.symbol = " ";
-      elixir.symbol = " ";
-      elm.symbol = " ";
-      git_branch.symbol = " ";
-      golang.symbol = " ";
-      hg_branch.symbol = " ";
-      java.symbol = " ";
-      julia.symbol = " ";
-      memory_usage.symbol = " ";
-      nim.symbol = " ";
-      nix_shell.symbol = " ";
-      package.symbol = " ";
-      perl.symbol = " ";
-      php.symbol = " ";
-      python.symbol = " ";
-      ruby.symbol = " ";
-      rust.symbol = " ";
-      scala.symbol = " ";
-      shlvl.symbol = " ";
-      swift.symbol = "ﯣ ";
->>>>>>> 37a0326 (add gls alias)
     };
   };
   programs.starship.enable = true;
