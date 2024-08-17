@@ -39,10 +39,16 @@ in {
 
   services.nix-daemon.enable = true;
 
+  # Any brews/casks MUST be justified as to why they are
+  # not being installed as a nix package.
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
-    brews = ["gh" "colima"];
+    brews = [
+      # gh is implicitly installed for attestation purposes.
+      # this prevents it from being repeatedly installed, then uninstalled
+      "gh"
+    ];
     casks =
       [
         "1password"
@@ -53,10 +59,12 @@ in {
         "visual-studio-code"
         "warp"
       ]
+      # Not available in nixpkgs
       ++ lib.optional personal "lulu"
+      # Not available in nixpkgs
       ++ lib.optional cvent "microsoft-outlook"
-      ++ lib.optional cvent "microsoft-excel"
-      ++ lib.optional cvent "discord";
+      # Not available in nixpkgs
+      ++ lib.optional cvent "microsoft-excel";
   };
 
   security.pam.enableSudoTouchIdAuth = true;

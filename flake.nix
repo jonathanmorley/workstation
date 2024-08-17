@@ -98,6 +98,9 @@
               ++ homeModules {
                 profiles = specialArgs.profiles;
                 username = "jonathan";
+                sshKeys = {
+                  "github.com" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBJbG+RkEeZ8WakJorykKKRPsJ1Su2c8Up/clPmuSqew";
+                };
               };
           };
         };
