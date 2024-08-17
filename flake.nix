@@ -56,8 +56,24 @@
       flake = {
         darwinConfigurations = rec {
           # GitHub CI
-          "ci" = darwin.lib.darwinSystem rec {
+          "ci-x86_64-darwin" = darwin.lib.darwinSystem rec {
             system = "x86_64-darwin";
+            specialArgs.profiles = [];
+
+            modules =
+              darwinModules
+              ++ homeModules {
+                profiles = specialArgs.profiles;
+                username = "runner";
+                sshKeys = {
+                  "github.com" = "";
+                };
+              };
+          };
+
+          # GitHub CI
+          "ci-aarch64-darwin" = darwin.lib.darwinSystem rec {
+            system = "aarch64-darwin";
             specialArgs.profiles = [];
 
             modules =
