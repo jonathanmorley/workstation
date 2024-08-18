@@ -56,8 +56,24 @@
       flake = {
         darwinConfigurations = rec {
           # GitHub CI
-          "ci" = darwin.lib.darwinSystem rec {
+          "ci-x86_64-darwin" = darwin.lib.darwinSystem rec {
             system = "x86_64-darwin";
+            specialArgs.profiles = [];
+
+            modules =
+              darwinModules
+              ++ homeModules {
+                profiles = specialArgs.profiles;
+                username = "runner";
+                sshKeys = {
+                  "github.com" = "";
+                };
+              };
+          };
+
+          # GitHub CI
+          "ci-aarch64-darwin" = darwin.lib.darwinSystem rec {
+            system = "aarch64-darwin";
             specialArgs.profiles = [];
 
             modules =
@@ -98,6 +114,9 @@
               ++ homeModules {
                 profiles = specialArgs.profiles;
                 username = "jonathan";
+                sshKeys = {
+                  "github.com" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBJbG+RkEeZ8WakJorykKKRPsJ1Su2c8Up/clPmuSqew";
+                };
               };
           };
         };

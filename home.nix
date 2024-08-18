@@ -248,7 +248,9 @@ in {
       unixtools.watch
     ]
     ++ lib.optional (! pkgs.stdenv.isDarwin) gh
+    ++ lib.optional pkgs.stdenv.isDarwin colima
     ++ lib.optional personal tailscale
+    ++ lib.optional cvent discord
     ++ lib.optional cvent slack
     ++ lib.optional cvent zoom-us;
 

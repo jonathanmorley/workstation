@@ -19,9 +19,18 @@ jobs:
       - name: Check Formatting
         run: nix fmt -- --check .
 
-  build-macos:
-    name: Build macOS Nix env
-    runs-on: macos-latest
+  build:
+    strategy:
+      matrix:
+        platform:
+          - x86_64-darwin
+          - aarch64-darwin
+        include:
+          - platform: x86_64-darwin
+            runner: macos-13  # this is the latest intel runner
+          - platform: aarch64-darwin
+            runner: macos-latest
+    runs-on: ${{ matrix.runner }}  
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -37,6 +46,6 @@ jobs:
     - name: Switch to nix-darwin ci env
       run: |
         nix --extra-experimental-features 'nix-command flakes' \
-          run nix-darwin -- switch --flake .#ci
+          run nix-darwin -- switch --flake .#ci-${{ matrix.platform }}
       env:
         NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
