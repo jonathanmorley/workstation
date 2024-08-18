@@ -30,7 +30,7 @@ jobs:
             runner: macos-13  # this is the latest intel runner
           - platform: aarch64-darwin
             runner: macos-latest
-    runs-on: ${{ matrix.runner }}  
+    runs-on: ${{ matrix.runner }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
