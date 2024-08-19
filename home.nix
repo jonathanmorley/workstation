@@ -32,8 +32,17 @@ in {
 
   programs.awscli.enable = true;
   programs.bat.enable = true;
+  programs.chromium = {
+    enable = true;
+    package = pkgs.google-chrome;
+  };
   programs.direnv.enable = true;
   programs.eza.enable = true;
+  programs.fd.enable = true;
+  programs.firefox = {
+    enable = true;
+    package = pkgs.firefox-bin;
+  };
   programs.git = {
     enable = true;
     delta.enable = true;
@@ -221,7 +230,6 @@ in {
 
   home.packages = with pkgs;
     [
-      _1password
       coreutils
       dasel
       docker-client
@@ -230,7 +238,6 @@ in {
       dotnet-sdk_7
       du-dust
       duf
-      fd
       gettext # For compiling Python
       gnupg # For fetching Java
       gnugrep

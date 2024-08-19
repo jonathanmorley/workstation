@@ -49,12 +49,15 @@ in {
     ];
     casks =
       [
+        # https://github.com/NixOS/nixpkgs/issues/254944
         "1password"
+        # Not available in nixpkgs
         "disk-inventory-x"
-        "firefox"
-        "google-chrome"
+        # Raycast won't configure itself to run at startup if installed by nix
         "raycast"
+        # VSCode will disappear from the dock if installed by nix
         "visual-studio-code"
+        # Warp from nix will complain about not being able to auto-update on startup
         "warp"
       ]
       # Not available in nixpkgs
@@ -90,7 +93,7 @@ in {
       dashboard-in-overlay = true;
       persistent-apps = [
         "/Applications/Warp.app"
-        "/Applications/Firefox.app"
+        "${pkgs.firefox-bin}/Applications/Firefox.app"
       ] ++ lib.optional cvent "${pkgs.slack}/Applications/Slack.app"
       ++ lib.optional cvent "/Applications/Microsoft Outlook.app";
       show-recents = false;

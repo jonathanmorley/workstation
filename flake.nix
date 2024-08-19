@@ -15,6 +15,10 @@
       url = "github:jonathanmorley/oktaws";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs-firefox-darwin = {
+      url = "github:bandithedoge/nixpkgs-firefox-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
     };
@@ -26,6 +30,7 @@
     darwin,
     home-manager,
     oktaws,
+    nixpkgs-firefox-darwin,
     flake-parts,
     ...
   }: let
@@ -38,7 +43,10 @@
     }: [
       home-manager.darwinModules.home-manager
       {
-        nixpkgs.overlays = [oktaws.overlays.default];
+        nixpkgs.overlays = [
+          oktaws.overlays.default
+          nixpkgs-firefox-darwin.overlay
+        ];
         nixpkgs.config.allowUnfree = true;
 
         home-manager.useGlobalPkgs = true;
