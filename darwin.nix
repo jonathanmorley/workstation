@@ -53,15 +53,13 @@ in {
         "1password"
         # Not available in nixpkgs
         "disk-inventory-x"
+        # Not available in nixpkgs
+        "lulu"
         # Raycast won't configure itself to run at startup if installed by nix
         "raycast"
-        # VSCode will disappear from the dock if installed by nix
-        "visual-studio-code"
         # Warp from nix will complain about not being able to auto-update on startup
         "warp"
       ]
-      # Not available in nixpkgs
-      ++ lib.optional personal "lulu"
       # Not available in nixpkgs
       ++ lib.optional cvent "microsoft-outlook"
       # Not available in nixpkgs

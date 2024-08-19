@@ -253,6 +253,7 @@ in {
       rustup
       tree
       unixtools.watch
+      vscode
     ]
     ++ lib.optional (! pkgs.stdenv.isDarwin) gh
     ++ lib.optional pkgs.stdenv.isDarwin colima
