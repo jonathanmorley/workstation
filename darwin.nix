@@ -17,8 +17,6 @@ in {
     experimental-features = "nix-command flakes";
   };
 
-  documentation.enable = false;
-
   environment.pathsToLink = ["/share/zsh"];
   environment.systemPath = [config.homebrew.brewPrefix];
   environment.shells = [pkgs.zsh];
@@ -70,26 +68,44 @@ in {
   security.pam.enableSudoTouchIdAuth = true;
   security.pki.certificateFiles = lib.optional cvent "/Library/Application Support/Netskope/STAgent/download/nscacert.pem";
 
-  system.defaults.ActivityMonitor.IconType = 5; # CPU Usage
-  system.defaults.NSGlobalDomain = {
-    AppleEnableMouseSwipeNavigateWithScrolls = false;
-    AppleEnableSwipeNavigateWithScrolls = false;
-    AppleInterfaceStyle = "Dark";
-    AppleKeyboardUIMode = 3; # full keyboard control
-    InitialKeyRepeat = 10;
-    KeyRepeat = 1;
-    NSAutomaticCapitalizationEnabled = false;
-    NSAutomaticDashSubstitutionEnabled = false;
-    NSAutomaticPeriodSubstitutionEnabled = false;
-    NSAutomaticQuoteSubstitutionEnabled = false;
-    NSAutomaticSpellingCorrectionEnabled = false;
-    NSTextShowsControlCharacters = true;
+  system.defaults = {
+    ActivityMonitor.IconType = 5; # CPU Usage
+    NSGlobalDomain = {
+      AppleEnableMouseSwipeNavigateWithScrolls = false;
+      AppleEnableSwipeNavigateWithScrolls = false;
+      AppleInterfaceStyle = "Dark";
+      AppleKeyboardUIMode = 3; # full keyboard control
+      AppleShowAllFiles = true;
+      InitialKeyRepeat = 10;
+      KeyRepeat = 1;
+      NSAutomaticCapitalizationEnabled = false;
+      NSAutomaticDashSubstitutionEnabled = false;
+      NSAutomaticPeriodSubstitutionEnabled = false;
+      NSAutomaticQuoteSubstitutionEnabled = false;
+      NSAutomaticSpellingCorrectionEnabled = false;
+      NSTextShowsControlCharacters = true;
+    };
+    SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
+    dock = {
+      dashboard-in-overlay = true;
+      persistent-apps = [
+        "/Applications/Warp.app"
+        "/Applications/Firefox.app"
+      ] ++ lib.optional cvent "${pkgs.slack}/Applications/Slack.app"
+      ++ lib.optional cvent "/Applications/Microsoft Outlook.app";
+      show-recents = false;
+      wvous-bl-corner = 5; # Start Screen Saver
+      wvous-br-corner = 13; # Lock Screen
+      wvous-tl-corner = 2; # Mission Control
+      wvous-tr-corner = 4; # Desktop
+    };
+    finder.ShowPathbar = true;
+    trackpad.ActuationStrength = 0;
+    trackpad.FirstClickThreshold = 0;
   };
-  system.defaults.SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
-  system.defaults.dock.dashboard-in-overlay = true;
-  system.defaults.finder.ShowPathbar = true;
-  system.defaults.trackpad.ActuationStrength = 0;
-  system.defaults.trackpad.FirstClickThreshold = 0;
-  system.keyboard.enableKeyMapping = true;
-  system.keyboard.remapCapsLockToControl = true;
+
+  system.keyboard = {
+    enableKeyMapping = true;
+    remapCapsLockToControl = true;
+  };
 }
