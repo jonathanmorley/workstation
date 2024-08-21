@@ -91,11 +91,13 @@ in {
     SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
     dock = {
       dashboard-in-overlay = true;
-      persistent-apps = [
-        "/Applications/Warp.app"
-        "/Applications/Firefox.app"
-      ] ++ lib.optional cvent "${pkgs.slack}/Applications/Slack.app"
-      ++ lib.optional cvent "/Applications/Microsoft Outlook.app";
+      persistent-apps =
+        [
+          "/Applications/Warp.app"
+          "/Applications/Firefox.app"
+        ]
+        ++ lib.optional cvent "${pkgs.slack}/Applications/Slack.app"
+        ++ lib.optional cvent "/Applications/Microsoft Outlook.app";
       show-recents = false;
       wvous-bl-corner = 5; # Start Screen Saver
       wvous-br-corner = 13; # Lock Screen
