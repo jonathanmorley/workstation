@@ -53,6 +53,8 @@ in {
         "1password"
         # Not available in nixpkgs
         "disk-inventory-x"
+        # The 1Password extension does not unlock with biometrics if FF is installed via nix
+        "firefox"
         # Not available in nixpkgs
         "lulu"
         # Raycast won't configure itself to run at startup if installed by nix
@@ -91,7 +93,7 @@ in {
       dashboard-in-overlay = true;
       persistent-apps = [
         "/Applications/Warp.app"
-        "${pkgs.firefox-bin}/Applications/Firefox.app"
+        "/Applications/Firefox.app"
       ] ++ lib.optional cvent "${pkgs.slack}/Applications/Slack.app"
       ++ lib.optional cvent "/Applications/Microsoft Outlook.app";
       show-recents = false;

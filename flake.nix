@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
@@ -13,10 +13,6 @@
     };
     oktaws = {
       url = "github:jonathanmorley/oktaws";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixpkgs-firefox-darwin = {
-      url = "github:bandithedoge/nixpkgs-firefox-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-parts = {
@@ -30,7 +26,6 @@
     darwin,
     home-manager,
     oktaws,
-    nixpkgs-firefox-darwin,
     flake-parts,
     ...
   }: let
@@ -45,7 +40,6 @@
       {
         nixpkgs.overlays = [
           oktaws.overlays.default
-          nixpkgs-firefox-darwin.overlay
         ];
         nixpkgs.config.allowUnfree = true;
 
