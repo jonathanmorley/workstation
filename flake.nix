@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
@@ -38,7 +38,9 @@
     }: [
       home-manager.darwinModules.home-manager
       {
-        nixpkgs.overlays = [oktaws.overlays.default];
+        nixpkgs.overlays = [
+          oktaws.overlays.default
+        ];
         nixpkgs.config.allowUnfree = true;
 
         home-manager.useGlobalPkgs = true;

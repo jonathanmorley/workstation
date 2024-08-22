@@ -32,8 +32,13 @@ in {
 
   programs.awscli.enable = true;
   programs.bat.enable = true;
+  programs.chromium = {
+    enable = true;
+    package = pkgs.google-chrome;
+  };
   programs.direnv.enable = true;
   programs.eza.enable = true;
+  programs.fd.enable = true;
   programs.git = {
     enable = true;
     delta.enable = true;
@@ -221,7 +226,6 @@ in {
 
   home.packages = with pkgs;
     [
-      _1password
       coreutils
       dasel
       docker-client
@@ -230,7 +234,6 @@ in {
       dotnet-sdk_7
       du-dust
       duf
-      fd
       gettext # For compiling Python
       gnupg # For fetching Java
       gnugrep
@@ -246,11 +249,11 @@ in {
       rustup
       tree
       unixtools.watch
+      vscode
     ]
     ++ lib.optional (! pkgs.stdenv.isDarwin) gh
     ++ lib.optional pkgs.stdenv.isDarwin colima
     ++ lib.optional personal tailscale
-    ++ lib.optional cvent discord
     ++ lib.optional cvent slack
     ++ lib.optional cvent zoom-us;
 
