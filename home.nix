@@ -54,7 +54,11 @@ in {
       else "morley.jonathan@gmail.com";
     signing.key = sshKeys."github.com";
     signing.signByDefault = true;
-    ignores = lib.splitString "\n" (builtins.readFile "${gitignores}/Global/${if pkgs.stdenv.isDarwin then "macOS" else "Linux"}.gitignore");
+    ignores = lib.splitString "\n" (builtins.readFile "${gitignores}/Global/${
+      if pkgs.stdenv.isDarwin
+      then "macOS"
+      else "Linux"
+    }.gitignore");
     extraConfig = {
       core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
       credential = {
@@ -188,7 +192,7 @@ in {
   };
 
   home.packages = with pkgs;
-    # Tools
+  # Tools
     [
       coreutils
       dasel
