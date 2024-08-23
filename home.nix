@@ -10,6 +10,11 @@
 }: let
   personal = builtins.elem "personal" profiles;
   cvent = builtins.elem "cvent" profiles;
+
+  gitignores = builtins.fetchGit {
+    url = "https://github.com/github/gitignore";
+    rev = "8779ee73af62c669e7ca371aaab8399d87127693";
+  };
 in {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
@@ -49,62 +54,16 @@ in {
       else "morley.jonathan@gmail.com";
     signing.key = sshKeys."github.com";
     signing.signByDefault = true;
-    ignores =
-      if pkgs.stdenv.isDarwin
-      then [
-        ### macOS ###
-        # General
-        ".DS_Store"
-        ".AppleDouble"
-        ".LSOverride"
-
-        # Icon must end with two \r
-        "Icon"
-
-        # Thumbnails
-        "._*"
-
-        # Files that might appear in the root of a volume
-        ".DocumentRevisions-V100"
-        ".fseventsd"
-        ".Spotlight-V100"
-        ".TemporaryItems"
-        ".Trashes"
-        ".VolumeIcon.icns"
-        ".com.apple.timemachine.donotpresent"
-
-        # Directories potentially created on remote AFP share
-        ".AppleDB"
-        ".AppleDesktop"
-        "Network Trash Folder"
-        "Temporary Items"
-        ".apdisk"
-      ]
-      else [
-        ### Linux ###
-        "*~"
-
-        # temporary files which can be created if a process still has a handle open of a deleted file
-        ".fuse_hidden*"
-
-        # KDE directory preferences
-        ".directory"
-
-        # Linux trash folder which might appear on any partition or disk
-        ".Trash-*"
-
-        # .nfs files are created when an open file is removed but is still being accessed
-        ".nfs*"
-      ];
+    ignores = lib.splitString "\n" (builtins.readFile "${gitignores}/Global/${if pkgs.stdenv.isDarwin then "macOS" else "Linux"}.gitignore");
     extraConfig = {
       core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
       credential = {
         "https://gist.github.com" = {
-          helper = "${pkgs.gh}/bin/gh auth git-credential";
+          helper = "gh auth git-credential";
           username = "jonathanmorley";
         };
         "https://github.com" = {
-          helper = "${pkgs.gh}/bin/gh auth git-credential";
+          helper = "gh auth git-credential";
           username = "jonathanmorley";
         };
       };
@@ -114,7 +73,7 @@ in {
       push.default = "current";
       init.defaultBranch = "main";
       gpg.format = "ssh";
-      gpg."ssh".program = lib.mkIf pkgs.stdenv.isDarwin "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      gpg.ssh.program = lib.mkIf pkgs.stdenv.isDarwin "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
       http.postBuffer = 2097152000;
       https.postBuffer = 2097152000;
     };
@@ -198,7 +157,11 @@ in {
         ];
       };
       commands = lib.optionalAttrs pkgs.stdenv.isDarwin {
-        Nix = "darwin-rebuild switch --recreate-lock-file --refresh --flake ${config.home.homeDirectory}/.nixpkgs";
+        Nix = "darwin-rebuild switch ${lib.cli.toGNUCommandLineShell {} {
+          recreate-lock-file = true;
+          refresh = true;
+          flake = "${config.home.homeDirectory}/.nixpkgs";
+        }}";
       };
     };
   };
@@ -225,31 +188,39 @@ in {
   };
 
   home.packages = with pkgs;
+    # Tools
     [
       coreutils
       dasel
       docker-client
       docker-buildx
       dogdns
-      dotnet-sdk_7
       du-dust
       duf
-      gettext # For compiling Python
-      gnupg # For fetching Java
       gnugrep
-      groff # Needed by awscli
       ipcalc
-      nodejs
-      nodePackages.pnpm
       oktaws
-      openssl
-      openssl.dev
-      pkg-config
-      python3
-      rustup
       tree
       unixtools.watch
       vscode
+    ]
+    # Languages / Package Managers
+    ++ [
+      dotnet-sdk_7
+      nodejs
+      nodePackages.pnpm
+      python3
+      rustup
+    ]
+    # Libraries
+    ++ [
+      gettext # For compiling Python
+      gnupg # For fetching Java
+      groff # Needed by awscli
+      libyaml # For compiling ruby
+      openssl
+      openssl.dev
+      pkg-config
     ]
     ++ lib.optional (! pkgs.stdenv.isDarwin) gh
     ++ lib.optional pkgs.stdenv.isDarwin colima
@@ -258,9 +229,13 @@ in {
     ++ lib.optional cvent zoom-us;
 
   home.shellAliases = {
-    cat = "bat";
-    dockerv = "docker run --rm -it -v $(pwd):$(pwd) -w $(pwd)";
-    gls = ''git log --pretty='format:' --name-only | grep -oP "^''$(git rev-parse --show-prefix)\K.*" | cut -d/ -f1 | sort -u'';
+    cat = "${pkgs.bat}/bin/bat";
+    dockerv = "${pkgs.docker-client}/bin/docker run ${lib.cli.toGNUCommandLineShell {} {
+      interactive = true;
+      tty = true;
+      rm = true;
+    }} --volume $(pwd):$(pwd) --workdir $(pwd)";
+    gls = ''${pkgs.git}/bin/git log --pretty='format:' --name-only | ${pkgs.gnugrep}/bin/grep -oP "^''$(${pkgs.git}/bin/git rev-parse --show-prefix)\K.*" | cut -d/ -f1 | sort -u'';
     nix-clean = "sudo nix-collect-garbage --delete-older-than 30d";
   };
 
