@@ -25,6 +25,7 @@ in {
     DOCKER_HOST = "unix:///Users/jonathan/.colima/default/docker.sock";
     PKG_CONFIG_PATH = "${config.homebrew.brewPrefix}/../lib/pkgconfig";
     NODE_EXTRA_CA_CERTS = lib.optional cvent "/Library/Application Support/Netskope/STAgent/download/nscacert.pem";
+    MISE_RUBY_INSTALL = "true";
   };
 
   fonts.packages = [
