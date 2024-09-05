@@ -63,11 +63,11 @@ in {
       core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
       credential = {
         "https://gist.github.com" = {
-          helper = "gh auth git-credential";
+          helper = "!gh auth git-credential";
           username = "jonathanmorley";
         };
         "https://github.com" = {
-          helper = "gh auth git-credential";
+          helper = "!gh auth git-credential";
           username = "jonathanmorley";
         };
       };
@@ -114,7 +114,10 @@ in {
   };
   programs.java.enable = true;
   programs.jq.enable = true;
-  programs.mise.enable = true;
+  programs.mise = {
+    enable = true;
+    enableZshIntegration = false;
+  };
   programs.neovim = {
     defaultEditor = true;
     enable = true;
@@ -178,6 +181,8 @@ in {
     syntaxHighlighting.enable = true;
     initExtra = ''
       export PATH="''${PATH}:''${HOME}/.cargo/bin"
+       # We want shims so that commands executed without a shell still use mise
+      eval "$(${lib.getExe pkgs.mise} activate --shims zsh)"
     '';
     oh-my-zsh = {
       enable = true;
@@ -203,6 +208,7 @@ in {
       duf
       gnugrep
       ipcalc
+      mtr
       oktaws
       tree
       unixtools.watch
