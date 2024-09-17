@@ -212,7 +212,6 @@ in {
       oktaws
       tree
       unixtools.watch
-      vscode
     ]
     # Languages / Package Managers
     ++ [
@@ -235,7 +234,6 @@ in {
     ++ lib.optional (! pkgs.stdenv.isDarwin) gh
     ++ lib.optional pkgs.stdenv.isDarwin colima
     ++ lib.optional personal tailscale
-    ++ lib.optional cvent slack
     ++ lib.optional cvent zoom-us;
 
   home.shellAliases = {
