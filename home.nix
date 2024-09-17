@@ -167,7 +167,7 @@ in {
         Nix = "darwin-rebuild switch ${lib.cli.toGNUCommandLineShell {} {
           recreate-lock-file = true;
           refresh = true;
-          flake = "${config.home.homeDirectory}/.nixpkgs";
+          flake = "github:jonathanmorley/nixpkgs";
         }}";
       };
     };
