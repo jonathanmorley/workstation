@@ -60,6 +60,7 @@ in {
       else "Linux"
     }.gitignore");
     extraConfig = {
+      
       core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
       credential = {
         "https://gist.github.com" = {
@@ -74,6 +75,7 @@ in {
       fetch.prune = true;
       rebase.autosquash = true;
       pull.rebase = true;
+      push.autoSetupRemote = true;
       push.default = "current";
       init.defaultBranch = "main";
       gpg.format = "ssh";
