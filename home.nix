@@ -93,7 +93,7 @@ in {
               user.signingKey = sshKeys.cvent;
             };
           }
-        ]) ["cvent" "cvent-archive" "cvent-incubator" "cvent-test" "icapture" "jifflenow" "SHOFLO" "socialtables" "weddingspot"]
+        ]) ["cvent" "cvent-archive" "cvent-incubator" "cvent-forks" "cvent-test" "icapture" "jifflenow" "SHOFLO" "socialtables" "weddingspot"]
         ++ [
           # Stash
           {
