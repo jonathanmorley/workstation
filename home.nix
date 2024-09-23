@@ -60,17 +60,12 @@ in {
       else "Linux"
     }.gitignore");
     extraConfig = {
-      core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
       credential = {
-        "https://gist.github.com" = {
-          helper = "!gh auth git-credential";
-          username = "jonathanmorley";
-        };
         "https://github.com" = {
-          helper = "!gh auth git-credential";
-          username = "jonathanmorley";
+          helper = ["" "!${pkgs.writeShellScript "credential-helper" "printf \"username=jonathanmorley\\npassword=$(gh auth token --user jonathanmorley)\\n\"" }"];
         };
       };
+      core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
       fetch.prune = true;
       rebase.autosquash = true;
       pull.rebase = true;
@@ -89,16 +84,13 @@ in {
           {
             condition = "hasconfig:remote.*.url:git@github.com:${org}-internal/**";
             contents = {
-              core.sshCommand = "ssh -i ${builtins.toFile "cvent.pub" sshKeys.cvent}";
-              user.signingKey = sshKeys.cvent;
               credential = {
-                "https://gist.github.com" = {
-                  username = "JMorley_cvent";
-                };
                 "https://github.com" = {
-                  username = "JMorley_cvent";
+                  helper = ["" "!${pkgs.writeShellScript "credential-helper" "printf \"username=JMorley_cvent\\npassword=$(gh auth token --user JMorley_cvent)\\n\"" }"];
                 };
               };
+              core.sshCommand = "ssh -i ${builtins.toFile "cvent.pub" sshKeys.cvent}";
+              user.signingKey = sshKeys.cvent;
             };
           }
         ]) ["cvent" "cvent-archive" "cvent-incubator" "cvent-test" "icapture" "jifflenow" "SHOFLO" "socialtables" "weddingspot"]
