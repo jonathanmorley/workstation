@@ -74,6 +74,7 @@ in {
       fetch.prune = true;
       rebase.autosquash = true;
       pull.rebase = true;
+      push.autoSetupRemote = true;
       push.default = "current";
       init.defaultBranch = "main";
       gpg.format = "ssh";
