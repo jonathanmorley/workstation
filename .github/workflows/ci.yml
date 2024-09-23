@@ -32,8 +32,15 @@ jobs:
             runner: macos-latest
     runs-on: ${{ matrix.runner }}
     steps:
+    - name: Runner Informtion
+      run: |
+        echo "Runner: ${{ runner.name }}"
+        echo "OS: ${{ runner.os }}"
+        echo "Architecture: ${{ runner.arch }}"
+        uname -a
     - name: Checkout repository
       uses: actions/checkout@v4
+    
     - name: Install Nix
       uses: DeterminateSystems/nix-installer-action@v9
     - name: Cache Nix
