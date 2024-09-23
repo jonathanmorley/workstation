@@ -166,7 +166,6 @@ in {
       };
       commands = lib.optionalAttrs pkgs.stdenv.isDarwin {
         Nix = "darwin-rebuild switch ${lib.cli.toGNUCommandLineShell {} {
-          recreate-lock-file = true;
           refresh = true;
           flake = "github:jonathanmorley/nixpkgs";
         }}";
