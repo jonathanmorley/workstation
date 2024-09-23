@@ -62,7 +62,7 @@ in {
     extraConfig = {
       credential = {
         "https://github.com" = {
-          helper = ["" "!${pkgs.writeShellScript "credential-helper" "printf \"username=jonathanmorley\\npassword=$(gh auth token --user jonathanmorley)\\n\"" }"];
+          helper = ["" "!${pkgs.writeShellScript "credential-helper" "printf \"username=jonathanmorley\\npassword=$(gh auth token --user jonathanmorley)\\n\""}"];
         };
       };
       core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
@@ -86,7 +86,7 @@ in {
             contents = {
               credential = {
                 "https://github.com" = {
-                  helper = ["" "!${pkgs.writeShellScript "credential-helper" "printf \"username=JMorley_cvent\\npassword=$(gh auth token --user JMorley_cvent)\\n\"" }"];
+                  helper = ["" "!${pkgs.writeShellScript "credential-helper" "printf \"username=JMorley_cvent\\npassword=$(gh auth token --user JMorley_cvent)\\n\""}"];
                 };
               };
               core.sshCommand = "ssh -i ${builtins.toFile "cvent.pub" sshKeys.cvent}";
