@@ -60,7 +60,6 @@ in {
       else "Linux"
     }.gitignore");
     extraConfig = {
-      
       core.sshCommand = "ssh -i ${builtins.toFile "github.com.pub" sshKeys."github.com"}";
       credential = {
         "https://gist.github.com" = {
