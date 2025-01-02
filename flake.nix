@@ -38,9 +38,11 @@
       ./darwin.nix
       home-manager.darwinModules.home-manager
       {
-        nixpkgs.overlays = [(final: prev: {
-          oktaws = oktaws.packages.${prev.system}.default;
-        })];
+        nixpkgs.overlays = [
+          (final: prev: {
+            oktaws = oktaws.packages.${prev.system}.default;
+          })
+        ];
         nixpkgs.config.allowUnfree = true;
 
         home-manager.useGlobalPkgs = true;
