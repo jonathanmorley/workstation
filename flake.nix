@@ -2,9 +2,9 @@
   description = "Jonathan's Configurations";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
@@ -29,18 +29,18 @@
     flake-parts,
     ...
   }: let
-    darwinModules = [./darwin.nix];
-    homeModules = {
+    darwinModules = {
       profiles,
       username,
       sshKeys,
       ...
     }: [
+      ./darwin.nix
       home-manager.darwinModules.home-manager
       {
-        nixpkgs.overlays = [
-          oktaws.overlays.default
-        ];
+        nixpkgs.overlays = [(final: prev: {
+          oktaws = oktaws.packages.${prev.system}.default;
+        })];
         nixpkgs.config.allowUnfree = true;
 
         home-manager.useGlobalPkgs = true;
@@ -62,15 +62,13 @@
             system = "x86_64-darwin";
             specialArgs.profiles = [];
 
-            modules =
-              darwinModules
-              ++ homeModules {
-                profiles = specialArgs.profiles;
-                username = "runner";
-                sshKeys = {
-                  "github.com" = "";
-                };
+            modules = darwinModules {
+              profiles = specialArgs.profiles;
+              username = "runner";
+              sshKeys = {
+                "github.com" = "";
               };
+            };
           };
 
           # GitHub CI
@@ -78,15 +76,13 @@
             system = "aarch64-darwin";
             specialArgs.profiles = [];
 
-            modules =
-              darwinModules
-              ++ homeModules {
-                profiles = specialArgs.profiles;
-                username = "runner";
-                sshKeys = {
-                  "github.com" = "";
-                };
+            modules = darwinModules {
+              profiles = specialArgs.profiles;
+              username = "runner";
+              sshKeys = {
+                "github.com" = "";
               };
+            };
           };
 
           # Cvent MacBook Air
@@ -94,16 +90,14 @@
             system = "aarch64-darwin";
             specialArgs.profiles = ["cvent"];
 
-            modules =
-              darwinModules
-              ++ homeModules {
-                profiles = specialArgs.profiles;
-                username = "jonathan";
-                sshKeys = {
-                  "cvent" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKuaMIMcObM1KyhncM9Qndv91P5EDreRxz5pFA7xSHaX";
-                  "github.com" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
-                };
+            modules = darwinModules {
+              profiles = specialArgs.profiles;
+              username = "jonathan";
+              sshKeys = {
+                "cvent" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKuaMIMcObM1KyhncM9Qndv91P5EDreRxz5pFA7xSHaX";
+                "github.com" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN0l85pYmr5UV3FTMAQnmZYyv1wVNeKej4YnIP8sk5fW";
               };
+            };
           };
 
           # Personal iMac
@@ -111,15 +105,13 @@
             system = "x86_64-darwin";
             specialArgs.profiles = ["personal"];
 
-            modules =
-              darwinModules
-              ++ homeModules {
-                profiles = specialArgs.profiles;
-                username = "jonathan";
-                sshKeys = {
-                  "github.com" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBJbG+RkEeZ8WakJorykKKRPsJ1Su2c8Up/clPmuSqew";
-                };
+            modules = darwinModules {
+              profiles = specialArgs.profiles;
+              username = "jonathan";
+              sshKeys = {
+                "github.com" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBJbG+RkEeZ8WakJorykKKRPsJ1Su2c8Up/clPmuSqew";
               };
+            };
           };
         };
       };
