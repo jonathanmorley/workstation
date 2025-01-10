@@ -182,7 +182,6 @@ in {
       plugins = [
         "gh"
         "git"
-        "ripgrep"
         "rust"
         "vscode"
       ];
